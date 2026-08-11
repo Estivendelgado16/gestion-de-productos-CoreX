@@ -1,0 +1,85 @@
+<div class="tolla-form-page">
+  <div class="tolla-form-page__head">
+    <div>
+      <h1 class="tolla-form-page__eyebrow">// NEW PRODUCT</h1>
+      <p class="tolla-form-page__hint">CREATE A NEW PRODUCT IN THE CATALOG</p>
+    </div>
+    <a routerLink="/products" class="tolla-form-page__back">← BACK</a>
+  </div>
+
+  <form
+    class="tolla-form"
+    [formGroup]="form"
+    (ngSubmit)="onSave()"
+    novalidate
+  >
+    <label class="tolla-form__field">
+      <span class="tolla-form__label">NAME</span>
+      <input
+        class="tolla-form__input"
+        type="text"
+        formControlName="name"
+        placeholder="Product name"
+      />
+    </label>
+
+    <label class="tolla-form__field">
+      <span class="tolla-form__label">DESCRIPTION</span>
+      <textarea
+        class="tolla-form__input"
+        rows="3"
+        formControlName="description"
+        placeholder="Optional description"
+      ></textarea>
+    </label>
+
+    <div class="tolla-form__row">
+      <label class="tolla-form__field">
+        <span class="tolla-form__label">PRICE</span>
+        <input
+          class="tolla-form__input"
+          type="number"
+          min="0"
+          step="0.01"
+          formControlName="price"
+        />
+      </label>
+
+      <label class="tolla-form__field">
+        <span class="tolla-form__label">STOCK</span>
+        <input
+          class="tolla-form__input"
+          type="number"
+          min="0"
+          step="1"
+          formControlName="stock"
+        />
+      </label>
+    </div>
+
+    <label class="tolla-form__field">
+      <span class="tolla-form__label">CATEGORY ID</span>
+      <input
+        class="tolla-form__input"
+        type="text"
+        formControlName="categoryId"
+        placeholder="Category UUID"
+      />
+    </label>
+
+    @if (error()) {
+      <div class="tolla-form__error">{{ error() }}</div>
+    }
+
+    <div class="tolla-form__actions">
+      <button
+        type="submit"
+        class="tolla-form__btn tolla-form__btn--ghost"
+        [disabled]="saving()"
+      >
+        SAVE
+      </button>
+      <a routerLink="/products" class="tolla-form__btn">CANCEL</a>
+    </div>
+  </form>
+</div>

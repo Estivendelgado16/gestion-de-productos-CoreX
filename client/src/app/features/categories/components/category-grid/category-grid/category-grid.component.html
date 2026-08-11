@@ -1,0 +1,26 @@
+<section class="tolla-category-grid" aria-label="Category grid">
+  <div class="tolla-category-grid__header">
+    <div>
+      <h2 class="tolla-category-grid__title">Categories</h2>
+      <p class="tolla-category-grid__hint">SELECT A NODE TO QUICK-EDIT · {{ categories.length }} CATEGORIES</p>
+    </div>
+  </div>
+
+  <div class="tolla-category-grid__grid">
+    @if (loading) {
+      @for (skeleton of [1, 2, 3]; track skeleton) {
+        <div class="tolla-category-grid__skeleton"></div>
+      }
+    } @else {
+      @for (category of categories; track category.id; let i = $index) {
+        <tolla-category-card
+          [category]="category"
+          [index]="i"
+          (selected)="onSelect($event)"
+          (edit)="onEdit($event)"
+        />
+      }
+      <tolla-create-node-card (createNode)="onCreate()" />
+    }
+  </div>
+</section>
