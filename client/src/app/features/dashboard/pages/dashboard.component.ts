@@ -86,6 +86,12 @@ export class DashboardComponent implements OnInit {
     this.selectedCategory.set(null);
   }
 
+  onCategoryDelete(category: Category): void {
+    this.categoryService.deleteCategory(category.id).subscribe({
+      next: () => this.loadCategories(),
+    });
+  }
+
   private openQuickEdit(category: Category): void {
     this.quickEditMode.set('edit');
     this.selectedCategory.set(category);
