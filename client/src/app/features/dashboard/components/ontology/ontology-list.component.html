@@ -1,0 +1,26 @@
+<section class="tolla-ontology" aria-label="Active ontology">
+  <div class="tolla-ontology__header">
+    <div>
+      <h2 class="tolla-ontology__title">Active Ontology</h2>
+      <p class="tolla-ontology__hint">SELECT A NODE TO QUICK-EDIT · {{ categories.length }} CATEGORIES</p>
+    </div>
+  </div>
+
+  <div class="tolla-ontology__grid">
+    @if (loading) {
+      @for (skeleton of [1, 2, 3]; track skeleton) {
+        <div class="tolla-ontology__skeleton"></div>
+      }
+    } @else {
+      @for (category of categories; track category.id; let i = $index) {
+        <tolla-category-card
+          [category]="category"
+          [index]="i"
+          (selected)="onSelect($event)"
+          (edit)="onEdit($event)"
+        />
+      }
+      <tolla-create-node-card (createNode)="onCreate()" />
+    }
+  </div>
+</section>

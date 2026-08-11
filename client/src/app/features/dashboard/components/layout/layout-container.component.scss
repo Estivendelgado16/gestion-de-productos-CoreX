@@ -1,0 +1,26 @@
+.tolla-layout {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 85% 10%, rgba(168, 85, 247, 0.08), transparent 40%),
+    radial-gradient(circle at 15% 90%, rgba(0, 229, 255, 0.06), transparent 40%),
+    var(--tolla-bg-base);
+
+  &__sidebar {
+    flex-shrink: 0;
+  }
+
+  &__main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  &__content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px 28px 48px;
+  }
+}

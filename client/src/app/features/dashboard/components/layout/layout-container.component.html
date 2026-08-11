@@ -1,0 +1,14 @@
+<div class="tolla-layout">
+  <tolla-sidebar class="tolla-layout__sidebar" (itemSelected)="onNav($event)" />
+  <div class="tolla-layout__main">
+    <tolla-header
+      class="tolla-layout__header"
+      [userName]="userName"
+      [resultCount]="resultCount"
+      (searchChanged)="onSearch($event)"
+    />
+    <main class="tolla-layout__content">
+      <ng-content />
+    </main>
+  </div>
+</div>

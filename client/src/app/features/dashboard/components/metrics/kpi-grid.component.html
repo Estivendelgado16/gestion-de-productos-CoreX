@@ -1,0 +1,5 @@
+<section class="tolla-kpi-grid" aria-label="Key performance indicators">
+  @for (kpi of kpis; track kpi.id) {
+    <tolla-kpi-card [kpi]="kpi" />
+  }
+</section>

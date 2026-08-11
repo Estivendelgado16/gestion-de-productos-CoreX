@@ -1,0 +1,189 @@
+.tolla-login {
+  position: relative;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  overflow: hidden;
+  background:
+    linear-gradient(rgba(0, 229, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 229, 255, 0.04) 1px, transparent 1px),
+    var(--tolla-bg-base);
+  background-size: 44px 44px;
+
+  &__glow {
+    position: absolute;
+    width: 520px;
+    height: 520px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--tolla-glow-magenta), transparent 65%);
+    filter: blur(60px);
+    opacity: 0.5;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  &__card {
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+    padding: 34px 32px;
+    border-radius: var(--tolla-radius-lg);
+    border: 1px solid var(--tolla-border);
+    background: linear-gradient(180deg, rgba(13, 19, 34, 0.92), rgba(5, 7, 13, 0.92));
+    backdrop-filter: blur(12px);
+    box-shadow: 0 0 60px rgba(0, 229, 255, 0.08);
+  }
+
+  &__brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 26px;
+  }
+
+  &__logo {
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    font-family: var(--tolla-font-display);
+    font-weight: 800;
+    font-size: 22px;
+    color: var(--tolla-bg-base);
+    background: linear-gradient(135deg, var(--tolla-cyan), var(--tolla-magenta));
+    clip-path: polygon(0 0, 100% 0, 100% 70%, 70% 100%, 0 100%);
+    box-shadow: 0 0 22px var(--tolla-glow-cyan);
+  }
+
+  &__name {
+    font-family: var(--tolla-font-display);
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.35em;
+    margin: 0;
+    color: var(--tolla-text-primary);
+  }
+
+  &__tag {
+    font-family: var(--tolla-font-mono);
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    color: var(--tolla-cyan);
+    margin: 4px 0 0;
+  }
+
+  &__title {
+    font-family: var(--tolla-font-display);
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin: 0 0 6px;
+    color: var(--tolla-text-primary);
+  }
+
+  &__hint {
+    font-size: 13px;
+    color: var(--tolla-text-muted);
+    margin: 0 0 22px;
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  &__label {
+    font-family: var(--tolla-font-mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--tolla-text-secondary);
+  }
+
+  &__input {
+    width: 100%;
+    background: var(--tolla-bg-input);
+    border: 1px solid var(--tolla-border);
+    border-radius: var(--tolla-radius-sm);
+    color: var(--tolla-text-primary);
+    font-family: var(--tolla-font-body);
+    font-size: 14px;
+    padding: 11px 12px;
+    outline: none;
+    transition: border-color var(--tolla-transition), box-shadow var(--tolla-transition);
+
+    &:focus {
+      border-color: var(--tolla-cyan);
+      box-shadow: 0 0 12px var(--tolla-glow-cyan);
+    }
+
+    &::placeholder {
+      color: var(--tolla-text-muted);
+    }
+  }
+
+  &__error {
+    font-size: 12.5px;
+    color: var(--tolla-magenta);
+    border: 1px solid var(--tolla-magenta);
+    background: rgba(255, 42, 109, 0.08);
+    border-radius: var(--tolla-radius-sm);
+    padding: 10px 12px;
+  }
+
+  &__submit {
+    margin-top: 6px;
+    padding: 13px 0;
+    font-family: var(--tolla-font-display);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--tolla-bg-base);
+    background: linear-gradient(135deg, var(--tolla-cyan), var(--tolla-magenta));
+    border: none;
+    border-radius: var(--tolla-radius-sm);
+    cursor: pointer;
+    transition: filter var(--tolla-transition), box-shadow var(--tolla-transition);
+
+    &:hover:not(:disabled) {
+      filter: brightness(1.1);
+      box-shadow: 0 0 26px rgba(0, 229, 255, 0.35);
+    }
+
+    &:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+  }
+
+  &__switch {
+    width: 100%;
+    margin-top: 18px;
+    padding: 10px 0;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--tolla-cyan);
+    background: transparent;
+    border: 1px solid var(--tolla-border-strong);
+    border-radius: var(--tolla-radius-sm);
+    cursor: pointer;
+    transition: all var(--tolla-transition);
+
+    &:hover {
+      color: var(--tolla-bg-base);
+      background: var(--tolla-cyan);
+      border-color: var(--tolla-cyan);
+    }
+  }
+}

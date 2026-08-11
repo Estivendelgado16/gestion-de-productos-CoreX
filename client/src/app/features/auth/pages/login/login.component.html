@@ -1,0 +1,60 @@
+<div class="tolla-login">
+  <div class="tolla-login__glow" aria-hidden="true"></div>
+
+  <div class="tolla-login__card">
+    <header class="tolla-login__brand">
+      <span class="tolla-login__logo" aria-hidden="true">T</span>
+      <div>
+        <h1 class="tolla-login__name">TOLLA</h1>
+        <p class="tolla-login__tag">ONTOLOGY ADMIN</p>
+      </div>
+    </header>
+
+    <h2 class="tolla-login__title">
+      {{ isRegistering() ? 'Create Account' : 'Access the Network' }}
+    </h2>
+    <p class="tolla-login__hint">
+      {{ isRegistering() ? 'Register to join the TOLLA grid.' : 'Log in to manage your ontology.' }}
+    </p>
+
+    <form class="tolla-login__form" [formGroup]="form" (ngSubmit)="onSubmit()">
+      @if (isRegistering()) {
+        <label class="tolla-login__field">
+          <span class="tolla-login__label">Name</span>
+          <input class="tolla-login__input" type="text" formControlName="name" placeholder="Operator ID" />
+        </label>
+      }
+
+      <label class="tolla-login__field">
+        <span class="tolla-login__label">Email</span>
+        <input class="tolla-login__input" type="email" formControlName="email" placeholder="you@tolla.io" />
+      </label>
+
+      <label class="tolla-login__field">
+        <span class="tolla-login__label">Password</span>
+        <input
+          class="tolla-login__input"
+          type="password"
+          formControlName="password"
+          placeholder="••••••••"
+        />
+      </label>
+
+      @if (error()) {
+        <div class="tolla-login__error">{{ error() }}</div>
+      }
+
+      <button
+        type="submit"
+        class="tolla-login__submit"
+        [disabled]="form.invalid || submitting()"
+      >
+        {{ submitting() ? 'CONNECTING…' : (isRegistering() ? 'REGISTER' : 'LOGIN') }}
+      </button>
+    </form>
+
+    <button type="button" class="tolla-login__switch" (click)="toggleMode()">
+      {{ isRegistering() ? 'Already have access? Log in' : 'New operator? Register' }}
+    </button>
+  </div>
+</div>

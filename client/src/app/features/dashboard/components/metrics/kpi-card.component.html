@@ -1,0 +1,34 @@
+<article
+  class="tolla-kpi"
+  [class.tolla-kpi--cyan]="kpi.tone === 'cyan'"
+  [class.tolla-kpi--magenta]="kpi.tone === 'magenta'"
+  [class.tolla-kpi--purple]="kpi.tone === 'purple'"
+  [class.tolla-kpi--amber]="kpi.tone === 'amber'"
+  [attr.title]="kpi.tooltip"
+>
+  <div class="tolla-kpi__head">
+    <span class="tolla-kpi__label">{{ kpi.label }}</span>
+    @if (kpi.icon) {
+      <span class="tolla-kpi__icon" aria-hidden="true">{{ kpi.icon }}</span>
+    }
+  </div>
+
+  <div class="tolla-kpi__value">
+    {{ kpi.value }}@if (kpi.unit) {
+      <span class="tolla-kpi__unit">{{ kpi.unit }}</span>
+    }
+  </div>
+
+  <div class="tolla-kpi__foot">
+    @if (kpi.delta !== undefined) {
+      <span class="tolla-kpi__delta" [class.tolla-kpi__delta--negative]="kpi.delta < 0">
+        {{ kpi.delta > 0 ? '▲' : '▼' }} {{ kpi.delta | number: '1.1-1' }}%
+      </span>
+    }
+    @if (kpi.deltaLabel) {
+      <span class="tolla-kpi__delta-label">{{ kpi.deltaLabel }}</span>
+    }
+  </div>
+
+  <div class="tolla-kpi__scanline" aria-hidden="true"></div>
+</article>

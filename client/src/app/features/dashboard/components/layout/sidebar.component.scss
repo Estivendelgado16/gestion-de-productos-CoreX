@@ -1,0 +1,131 @@
+.tolla-sidebar {
+  width: var(--tolla-sidebar-w);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--tolla-border-faint);
+  background: linear-gradient(180deg, var(--tolla-bg-elevated), var(--tolla-bg-deep));
+
+  &__head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--tolla-border-faint);
+  }
+
+  &__status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--tolla-green);
+    box-shadow: 0 0 10px var(--tolla-green);
+    animation: tolla-pulse 2s infinite;
+  }
+
+  &__status {
+    font-family: var(--tolla-font-mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--tolla-text-muted);
+  }
+
+  &__nav {
+    flex: 1;
+    padding: 16px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    overflow-y: auto;
+  }
+
+  &__label {
+    font-family: var(--tolla-font-mono);
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: var(--tolla-text-muted);
+    padding: 8px 10px 10px;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 11px 12px;
+    border: 1px solid transparent;
+    border-radius: var(--tolla-radius-md);
+    background: transparent;
+    color: var(--tolla-text-secondary);
+    font-family: var(--tolla-font-body);
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    position: relative;
+    transition: all var(--tolla-transition);
+
+    &:hover {
+      color: var(--tolla-text-primary);
+      background: var(--tolla-bg-hover);
+      border-color: var(--tolla-border-faint);
+    }
+
+    &--active {
+      color: var(--tolla-cyan);
+      background: linear-gradient(90deg, rgba(0, 229, 255, 0.1), transparent);
+      border-color: var(--tolla-border);
+      box-shadow: inset 0 0 20px rgba(0, 229, 255, 0.06);
+    }
+  }
+
+  &__item-icon {
+    width: 22px;
+    text-align: center;
+    font-size: 14px;
+    color: currentColor;
+  }
+
+  &__item-indicator {
+    position: absolute;
+    right: 0;
+    top: 20%;
+    height: 60%;
+    width: 3px;
+    background: var(--tolla-cyan);
+    box-shadow: 0 0 8px var(--tolla-glow-cyan);
+  }
+
+  &__foot {
+    padding: 16px 20px;
+    border-top: 1px solid var(--tolla-border-faint);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  &__version {
+    font-family: var(--tolla-font-mono);
+    font-size: 10px;
+    color: var(--tolla-text-muted);
+    letter-spacing: 0.15em;
+  }
+
+  &__glitch {
+    font-family: var(--tolla-font-mono);
+    font-size: 9px;
+    color: var(--tolla-magenta);
+    opacity: 0.7;
+    letter-spacing: 0.1em;
+  }
+}
+
+@keyframes tolla-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}

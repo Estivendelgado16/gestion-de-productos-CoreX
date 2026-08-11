@@ -1,0 +1,177 @@
+.tolla-header {
+  height: var(--tolla-header-h);
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 0 24px;
+  border-bottom: 1px solid var(--tolla-border-faint);
+  background: linear-gradient(180deg, rgba(11, 16, 28, 0.92), rgba(5, 7, 13, 0.92));
+  backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+
+  &__brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+
+  &__logo {
+    width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    font-family: var(--tolla-font-display);
+    font-weight: 800;
+    font-size: 20px;
+    color: var(--tolla-bg-base);
+    background: linear-gradient(135deg, var(--tolla-cyan), var(--tolla-magenta));
+    clip-path: polygon(0 0, 100% 0, 100% 70%, 70% 100%, 0 100%);
+    box-shadow: 0 0 18px var(--tolla-glow-cyan);
+  }
+
+  &__brand-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+  }
+
+  &__name {
+    font-family: var(--tolla-font-display);
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: 0.35em;
+    color: var(--tolla-text-primary);
+  }
+
+  &__sub {
+    font-family: var(--tolla-font-mono);
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    color: var(--tolla-cyan);
+    margin-top: 4px;
+  }
+
+  &__search {
+    flex: 1;
+    max-width: 560px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--tolla-bg-input);
+    border: 1px solid var(--tolla-border);
+    border-radius: var(--tolla-radius-md);
+    padding: 0 14px;
+    height: 40px;
+    transition: border-color var(--tolla-transition), box-shadow var(--tolla-transition);
+
+    &:focus-within {
+      border-color: var(--tolla-cyan);
+      box-shadow: 0 0 14px var(--tolla-glow-cyan);
+    }
+  }
+
+  &__search-icon {
+    color: var(--tolla-text-muted);
+    flex-shrink: 0;
+  }
+
+  &__search-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: var(--tolla-text-primary);
+    font-family: var(--tolla-font-body);
+    font-size: 15px;
+
+    &::placeholder {
+      color: var(--tolla-text-muted);
+    }
+
+    &::-webkit-search-cancel-button {
+      display: none;
+    }
+  }
+
+  &__search-clear {
+    border: none;
+    background: none;
+    color: var(--tolla-text-muted);
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 2px 4px;
+
+    &:hover {
+      color: var(--tolla-magenta);
+    }
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  &__count {
+    font-family: var(--tolla-font-mono);
+    font-size: 11px;
+    color: var(--tolla-text-muted);
+    border: 1px solid var(--tolla-border-faint);
+    padding: 4px 10px;
+    border-radius: 999px;
+  }
+
+  &__user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  &__avatar {
+    width: 32px;
+    height: 32px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    font-family: var(--tolla-font-display);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--tolla-text-primary);
+    background: radial-gradient(circle at 30% 20%, var(--tolla-purple), var(--tolla-bg-card));
+    border: 1px solid var(--tolla-border-strong);
+  }
+
+  &__username {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--tolla-text-secondary);
+  }
+
+  &__logout {
+    font-family: var(--tolla-font-display);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--tolla-magenta);
+    background: transparent;
+    border: 1px solid var(--tolla-magenta);
+    border-radius: var(--tolla-radius-sm);
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: background var(--tolla-transition), color var(--tolla-transition),
+      box-shadow var(--tolla-transition);
+
+    &:hover {
+      background: var(--tolla-magenta);
+      color: var(--tolla-bg-base);
+      box-shadow: 0 0 16px var(--tolla-glow-magenta);
+    }
+  }
+}

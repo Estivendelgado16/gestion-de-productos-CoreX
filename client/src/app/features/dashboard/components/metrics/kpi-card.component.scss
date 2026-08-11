@@ -1,0 +1,105 @@
+.tolla-kpi {
+  position: relative;
+  overflow: hidden;
+  padding: 18px 20px;
+  border-radius: var(--tolla-radius-lg);
+  border: 1px solid var(--tolla-border-faint);
+  background: linear-gradient(180deg, var(--tolla-bg-card), var(--tolla-bg-elevated));
+  transition: transform var(--tolla-transition), border-color var(--tolla-transition),
+    box-shadow var(--tolla-transition);
+
+  &:hover {
+    transform: translateY(-3px);
+    border-color: var(--tolla-border-strong);
+  }
+
+  &--cyan {
+    --tolla-kpi-accent: var(--tolla-cyan);
+    --tolla-kpi-glow: var(--tolla-glow-cyan);
+  }
+
+  &--magenta {
+    --tolla-kpi-accent: var(--tolla-magenta);
+    --tolla-kpi-glow: var(--tolla-glow-magenta);
+  }
+
+  &--purple {
+    --tolla-kpi-accent: var(--tolla-purple);
+    --tolla-kpi-glow: var(--tolla-glow-purple);
+  }
+
+  &--amber {
+    --tolla-kpi-accent: var(--tolla-amber);
+    --tolla-kpi-glow: rgba(255, 176, 32, 0.3);
+  }
+
+  &__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+
+  &__label {
+    font-family: var(--tolla-font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--tolla-text-muted);
+  }
+
+  &__icon {
+    color: var(--tolla-kpi-accent);
+    font-size: 14px;
+    filter: drop-shadow(0 0 6px var(--tolla-kpi-glow));
+  }
+
+  &__value {
+    font-family: var(--tolla-font-display);
+    font-weight: 700;
+    font-size: 30px;
+    letter-spacing: 0.04em;
+    color: var(--tolla-kpi-accent);
+    text-shadow: 0 0 18px var(--tolla-kpi-glow);
+    line-height: 1;
+  }
+
+  &__unit {
+    font-size: 15px;
+    margin-left: 4px;
+    opacity: 0.75;
+  }
+
+  &__foot {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-top: 14px;
+  }
+
+  &__delta {
+    font-family: var(--tolla-font-mono);
+    font-size: 12px;
+    color: var(--tolla-green);
+    font-weight: 600;
+
+    &--negative {
+      color: var(--tolla-magenta);
+    }
+  }
+
+  &__delta-label {
+    font-size: 12px;
+    color: var(--tolla-text-muted);
+  }
+
+  &__scanline {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 2px;
+    width: 100%;
+    background: linear-gradient(90deg, transparent, var(--tolla-kpi-accent), transparent);
+    opacity: 0.5;
+  }
+}

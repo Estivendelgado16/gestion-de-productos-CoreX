@@ -1,0 +1,55 @@
+.tolla-create-node {
+  height: 100%;
+  width: 100%;
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px dashed var(--tolla-border-strong);
+  border-radius: var(--tolla-radius-lg);
+  background: rgba(13, 19, 34, 0.4);
+  color: var(--tolla-text-secondary);
+  cursor: pointer;
+  transition: all var(--tolla-transition);
+
+  &:hover {
+    border-color: var(--tolla-magenta);
+    color: var(--tolla-magenta);
+    background: rgba(255, 42, 109, 0.05);
+    box-shadow: inset 0 0 30px rgba(255, 42, 109, 0.06);
+  }
+
+  &__plus {
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    font-size: 28px;
+    font-weight: 300;
+    border-radius: 50%;
+    border: 1px solid currentColor;
+    margin-bottom: 6px;
+    transition: transform var(--tolla-transition);
+
+    .tolla-create-node:hover & {
+      transform: rotate(90deg);
+    }
+  }
+
+  &__title {
+    font-family: var(--tolla-font-display);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  &__sub {
+    font-family: var(--tolla-font-mono);
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    color: var(--tolla-text-muted);
+  }
+}

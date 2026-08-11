@@ -1,0 +1,47 @@
+@use './app/shared/styles/tokens';
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  background-color: var(--tolla-bg-base);
+  color: var(--tolla-text-primary);
+  font-family: var(--tolla-font-body);
+  font-size: 16px;
+  letter-spacing: 0.015em;
+  -webkit-font-smoothing: antialiased;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+a {
+  color: var(--tolla-cyan);
+  text-decoration: none;
+}
+
+::selection {
+  background: var(--tolla-glow-magenta);
+  color: var(--tolla-text-primary);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--tolla-bg-deep);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--tolla-border-strong);
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--tolla-cyan);
+}
