@@ -1,0 +1,79 @@
+<div class="tolla-page">
+  <div class="tolla-page__head">
+    <div>
+      <h1 class="tolla-page__eyebrow">// CATEGORIES</h1>
+      <p class="tolla-page__hint">{{ categories().length }} CATEGORIES</p>
+    </div>
+    <button type="button" class="tolla-page__create" (click)="toggleCreate()">
+      + CREATE
+    </button>
+  </div>
+
+  @if (creating()) {
+    <form class="tolla-category-form" [formGroup]="form" (ngSubmit)="onSave()" novalidate>
+      <label class="tolla-category-form__field">
+        <span class="tolla-category-form__label">NAME</span>
+        <input
+          class="tolla-category-form__input"
+          type="text"
+          formControlName="name"
+          placeholder="Category name"
+        />
+      </label>
+
+      <label class="tolla-category-form__field">
+        <span class="tolla-category-form__label">DESCRIPTION</span>
+        <textarea
+          class="tolla-category-form__input"
+          rows="2"
+          formControlName="description"
+          placeholder="Optional description"
+        ></textarea>
+      </label>
+
+      @if (error()) {
+        <div class="tolla-category-form__error">{{ error() }}</div>
+      }
+
+      <div class="tolla-category-form__actions">
+        <button
+          type="button"
+          class="tolla-category-form__btn tolla-category-form__btn--ghost"
+          (click)="toggleCreate()"
+        >
+          CANCEL
+        </button>
+        <button
+          type="submit"
+          class="tolla-category-form__btn"
+          [disabled]="saving()"
+        >
+          SAVE
+        </button>
+      </div>
+    </form>
+  }
+
+  <div class="tolla-page__body">
+    @if (loading()) {
+      @for (skeleton of [1, 2, 3]; track skeleton) {
+        <div class="tolla-page__skeleton"></div>
+      }
+    } @else if (categories().length === 0) {
+      <div class="tolla-page__empty">No categories found.</div>
+    } @else {
+      <div class="tolla-page__grid">
+        @for (category of categories(); track category.id) {
+          <article class="tolla-category-card">
+            <div class="tolla-category-card__head" style="display: flex; justify-content: space-between;">
+              <span class="tolla-category-card__name">{{ category.name }}</span>
+              <button type="button" style="color: #ff2a6d; background: transparent; border: 1px solid #ff2a6d; border-radius: 4px; padding: 2px 8px; cursor: pointer;" (click)="onCategoryDelete(category.id)">Delete</button>
+            </div>
+            <p class="tolla-category-card__desc">{{ category.description }}</p>
+            <span class="tolla-category-card__date">{{ category.createdAt }}</span>
+          </article>
+        }
+      </div>
+    }
+  </div>
+</div>
