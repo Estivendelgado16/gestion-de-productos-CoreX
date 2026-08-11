@@ -43,6 +43,23 @@
     background-size: 200% 100%;
     animation: tolla-shimmer 1.4s infinite;
   }
+
+  &__state {
+    display: flex;
+    align-items: center;
+    min-height: 200px;
+    padding: 20px;
+    border: 1px dashed var(--tolla-border);
+    border-radius: var(--tolla-radius-lg);
+    color: var(--tolla-text-muted);
+    font-size: 14px;
+    line-height: 1.5;
+
+    &--error {
+      border-color: var(--tolla-magenta);
+      color: var(--tolla-magenta);
+    }
+  }
 }
 
 @keyframes tolla-shimmer {

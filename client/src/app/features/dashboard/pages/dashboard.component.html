@@ -21,14 +21,21 @@
         <tolla-ontology-list
           [categories]="categories()"
           [loading]="loadingCategories()"
+          [error]="categoriesError()"
           (categorySelected)="onCategorySelected($event)"
           (categoryEdit)="onCategoryEdit($event)"
           (createNode)="onCreateNode()"
         />
       </section>
 
+      @if (saveSuccess()) {
+        <div class="tolla-dashboard__success" role="status">{{ saveSuccess() }}</div>
+      }
+
       @if (loadingProducts()) {
         <div class="tolla-dashboard__products-loading">SYNCING PRODUCT CATALOG…</div>
+      } @else if (productsError()) {
+        <div class="tolla-dashboard__products-error" role="alert">{{ productsError() }}</div>
       } @else if (products().length === 0) {
         <div class="tolla-dashboard__products-empty">
           No products match the current query.

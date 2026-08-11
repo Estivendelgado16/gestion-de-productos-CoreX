@@ -13,6 +13,7 @@ import { CreateNodeCardComponent } from './create-node-card.component';
 export class OntologyListComponent {
   @Input({ required: true }) categories: Category[] = [];
   @Input() loading: boolean = false;
+  @Input() error: string | null = null;
 
   @Output() categorySelected = new EventEmitter<Category>();
   @Output() categoryEdit = new EventEmitter<Category>();

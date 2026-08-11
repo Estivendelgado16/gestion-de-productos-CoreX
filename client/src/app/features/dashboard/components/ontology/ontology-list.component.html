@@ -11,6 +11,16 @@
       @for (skeleton of [1, 2, 3]; track skeleton) {
         <div class="tolla-ontology__skeleton"></div>
       }
+    } @else if (error) {
+      <div class="tolla-ontology__state tolla-ontology__state--error" role="alert">
+        {{ error }}
+      </div>
+      <tolla-create-node-card (createNode)="onCreate()" />
+    } @else if (categories.length === 0) {
+      <div class="tolla-ontology__state">
+        No categories have been created yet. Create the first node to build the ontology.
+      </div>
+      <tolla-create-node-card (createNode)="onCreate()" />
     } @else {
       @for (category of categories; track category.id; let i = $index) {
         <tolla-category-card

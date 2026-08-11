@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 
 import { AuthService } from '../../../core/services/auth.service';
@@ -37,6 +38,9 @@ export class DashboardComponent implements OnInit {
   readonly totalProducts = signal<number>(0);
   readonly loadingCategories = signal<boolean>(true);
   readonly loadingProducts = signal<boolean>(true);
+  readonly categoriesError = signal<string | null>(null);
+  readonly productsError = signal<string | null>(null);
+  readonly saveSuccess = signal<string | null>(null);
   readonly searchTerm = signal<string>('');
 
   readonly quickEditOpen = signal<boolean>(false);
@@ -77,6 +81,7 @@ export class DashboardComponent implements OnInit {
   onNodeSaved(_savedCategory: Category): void {
     this.quickEditOpen.set(false);
     this.selectedCategory.set(null);
+    this.saveSuccess.set('Category saved successfully.');
     this.loadCategories();
     this.loadProducts();
   }
@@ -106,14 +111,16 @@ export class DashboardComponent implements OnInit {
 
   private loadCategories(): void {
     this.loadingCategories.set(true);
+    this.categoriesError.set(null);
 
     this.categoryService.getCategories().subscribe({
       next: (categories: Category[]) => {
         this.categories.set(categories);
         this.loadingCategories.set(false);
       },
-      error: () => {
+      error: (error: unknown) => {
         this.categories.set([]);
+        this.categoriesError.set(this.getErrorMessage(error, 'Unable to load categories.'));
         this.loadingCategories.set(false);
       },
     });
@@ -121,6 +128,7 @@ export class DashboardComponent implements OnInit {
 
   private loadProducts(): void {
     this.loadingProducts.set(true);
+    this.productsError.set(null);
 
     this.productService
       .getProducts({ search: this.searchTerm() || undefined, limit: 10 })
@@ -130,9 +138,10 @@ export class DashboardComponent implements OnInit {
           this.totalProducts.set(response.total);
           this.loadingProducts.set(false);
         },
-        error: () => {
+        error: (error: unknown) => {
           this.products.set([]);
           this.totalProducts.set(0);
+          this.productsError.set(this.getErrorMessage(error, 'Unable to load products.'));
           this.loadingProducts.set(false);
         },
       });
@@ -201,5 +210,21 @@ export class DashboardComponent implements OnInit {
 
   private countUncategorized(products: Product[]): number {
     return products.filter((product: Product) => !product.categoryId).length;
+  }
+
+  private getErrorMessage(error: unknown, fallback: string): string {
+    if (error instanceof HttpErrorResponse && typeof error.error === 'object' && error.error !== null) {
+      const message = (error.error as { message?: string | string[] }).message;
+
+      if (Array.isArray(message)) {
+        return message.join(' · ');
+      }
+
+      if (typeof message === 'string') {
+        return message;
+      }
+    }
+
+    return fallback;
   }
 }

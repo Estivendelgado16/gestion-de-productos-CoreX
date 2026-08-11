@@ -88,6 +88,24 @@
     text-align: center;
     padding: 20px 0;
   }
+
+  &__products-error,
+  &__success {
+    font-size: 14px;
+    text-align: center;
+    padding: 14px;
+    border-radius: var(--tolla-radius-md);
+  }
+
+  &__products-error {
+    color: var(--tolla-magenta);
+    border: 1px solid var(--tolla-magenta);
+  }
+
+  &__success {
+    color: var(--tolla-green);
+    border: 1px solid rgba(34, 211, 165, 0.4);
+  }
 }
 
 @keyframes tolla-live {
