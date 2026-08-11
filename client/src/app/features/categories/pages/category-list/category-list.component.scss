@@ -79,6 +79,15 @@
     padding: 20px 0;
   }
 
+  &__error {
+    font-size: 14px;
+    color: var(--tolla-magenta);
+    text-align: center;
+    padding: 14px;
+    border: 1px solid var(--tolla-magenta);
+    border-radius: var(--tolla-radius-md);
+  }
+
   &__grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));

@@ -89,24 +89,22 @@
     padding: 20px 0;
   }
 
-<<<<<<< HEAD:client/src/app/features/dashboard/pages/dashboard.component.scss
-  &__products-error,
-  &__success {
+  &__error {
     font-size: 14px;
-    text-align: center;
     padding: 14px;
-    border-radius: var(--tolla-radius-md);
-  }
-
-  &__products-error {
     color: var(--tolla-magenta);
     border: 1px solid var(--tolla-magenta);
+    border-radius: var(--tolla-radius-md);
+
+    p {
+      margin: 0;
+    }
+
+    p + p {
+      margin-top: 8px;
+    }
   }
 
-  &__success {
-    color: var(--tolla-green);
-    border: 1px solid rgba(34, 211, 165, 0.4);
-=======
   &__links {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -159,7 +157,6 @@
     letter-spacing: 0.18em;
     color: var(--tolla-text-muted);
     margin-top: 4px;
->>>>>>> develop:client/src/app/features/dashboard/pages/dashboard/dashboard.component.scss
   }
 }
 

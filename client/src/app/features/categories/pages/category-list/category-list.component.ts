@@ -6,6 +6,7 @@ import {
   Validators,
 } from '@angular/forms';
 
+import { getApiErrorMessage } from '../../../../core/utils/api-error-message';
 import { Category } from '../../../../models/category.model';
 import { CategoryService } from '../../../../services/category.service';
 
@@ -28,6 +29,7 @@ export class CategoryListComponent {
   readonly creating = signal<boolean>(false);
   readonly saving = signal<boolean>(false);
   readonly error = signal<string | null>(null);
+  readonly loadError = signal<string | null>(null);
 
   readonly form: FormGroup<CategoryFormControls> = new FormGroup<CategoryFormControls>({
     name: new FormControl<string>('', {
@@ -79,14 +81,16 @@ export class CategoryListComponent {
 
   private loadCategories(): void {
     this.loading.set(true);
+    this.loadError.set(null);
 
     this.categoryService.getCategories().subscribe({
       next: (categories: Category[]) => {
         this.categories.set(categories);
         this.loading.set(false);
       },
-      error: () => {
+      error: (error: unknown) => {
         this.categories.set([]);
+        this.loadError.set(getApiErrorMessage(error, 'Unable to load categories.'));
         this.loading.set(false);
       },
     });

@@ -11,6 +11,8 @@
       @for (skeleton of [1, 2, 3]; track skeleton) {
         <div class="tolla-page__skeleton"></div>
       }
+    } @else if (error()) {
+      <div class="tolla-page__error" role="alert">{{ error() }}</div>
     } @else if (favorites().length === 0) {
       <div class="tolla-page__empty">No favorites yet.</div>
     } @else {

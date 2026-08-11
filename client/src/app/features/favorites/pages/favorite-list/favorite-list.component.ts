@@ -1,5 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 
+import { getApiErrorMessage } from '../../../../core/utils/api-error-message';
 import { FavoriteService } from '../../../../services/favorite.service';
 import { Product } from '../../../../models/product.model';
 
@@ -14,6 +15,7 @@ export class FavoriteListComponent {
 
   readonly favorites = signal<Product[]>([]);
   readonly loading = signal<boolean>(true);
+  readonly error = signal<string | null>(null);
 
   ngOnInit(): void {
     this.loadFavorites();
@@ -27,14 +29,16 @@ export class FavoriteListComponent {
 
   private loadFavorites(): void {
     this.loading.set(true);
+    this.error.set(null);
 
     this.favoriteService.getFavorites().subscribe({
       next: (products: Product[]) => {
         this.favorites.set(products);
         this.loading.set(false);
       },
-      error: () => {
+      error: (error: unknown) => {
         this.favorites.set([]);
+        this.error.set(getApiErrorMessage(error, 'Unable to load favorites.'));
         this.loading.set(false);
       },
     });

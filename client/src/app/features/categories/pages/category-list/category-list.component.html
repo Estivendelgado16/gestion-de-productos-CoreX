@@ -59,6 +59,8 @@
       @for (skeleton of [1, 2, 3]; track skeleton) {
         <div class="tolla-page__skeleton"></div>
       }
+    } @else if (loadError()) {
+      <div class="tolla-page__error" role="alert">{{ loadError() }}</div>
     } @else if (categories().length === 0) {
       <div class="tolla-page__empty">No categories found.</div>
     } @else {
