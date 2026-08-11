@@ -1,0 +1,89 @@
+.tolla-settings {
+  display: grid;
+  gap: 2rem;
+  padding: 2rem;
+}
+
+.tolla-settings__hero {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.tolla-settings__eyebrow {
+  color: #7c8a9d;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  margin-bottom: 0.75rem;
+}
+
+.tolla-settings__title {
+  margin: 0;
+  font-size: clamp(2rem, 2.5vw, 3rem);
+}
+
+.tolla-settings__subtitle {
+  max-width: 50rem;
+  color: #adb5c7;
+  margin-top: 0.75rem;
+}
+
+.tolla-settings__back-link {
+  color: #8be9fd;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.tolla-settings__content {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.tolla-settings__loading,
+.tolla-settings__error {
+  color: #f8f8f2;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 1rem;
+  padding: 1rem 1.25rem;
+}
+
+.tolla-settings__error {
+  color: #ff75a0;
+}
+
+.tolla-settings__profile {
+  display: grid;
+}
+
+.tolla-settings__card {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1.5rem;
+  padding: 2rem;
+  background: rgba(10, 14, 23, 0.88);
+}
+
+.tolla-settings__section-title {
+  margin: 0 0 1.5rem;
+  font-size: 1.25rem;
+}
+
+.tolla-settings__fields {
+  display: grid;
+  gap: 1rem;
+}
+
+.tolla-settings__fields dt {
+  font-size: 0.8rem;
+  color: #7c8a9d;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  margin-bottom: 0.25rem;
+}
+
+.tolla-settings__fields dd {
+  margin: 0;
+  font-size: 1rem;
+  color: #f8f8f2;
+}

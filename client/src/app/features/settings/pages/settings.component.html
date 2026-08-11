@@ -1,0 +1,81 @@
+<div class="tolla-settings">
+  <section class="tolla-settings__hero">
+    <div>
+      <p class="tolla-settings__eyebrow">// USER PROFILE</p>
+      <h1 class="tolla-settings__title">Account settings</h1>
+      <p class="tolla-settings__subtitle">
+        Update your profile details and change your password whenever you need.
+      </p>
+    </div>
+    <a routerLink="/dashboard" class="tolla-settings__back-link">← Back to dashboard</a>
+  </section>
+
+  <div class="tolla-settings__content">
+    <div *ngIf="loading()" class="tolla-settings__loading">Loading profile...</div>
+    <div *ngIf="!loading() && profileError()" class="tolla-settings__error">{{ profileError() }}</div>
+
+    <section *ngIf="!loading() && user() as profile" class="tolla-settings__profile">
+      <form class="tolla-settings__card" [formGroup]="profileForm" (ngSubmit)="onSaveProfile()">
+        <div class="tolla-settings__card-header">
+          <div>
+            <h2 class="tolla-settings__section-title">Profile information</h2>
+            <p class="tolla-settings__section-subtitle">Edit your name and email address.</p>
+          </div>
+          <span class="tolla-settings__user-id">ID: {{ profile.id }}</span>
+        </div>
+
+        <label class="tolla-settings__field">
+          <span>Name</span>
+          <input formControlName="name" type="text" />
+        </label>
+
+        <label class="tolla-settings__field">
+          <span>Email</span>
+          <input formControlName="email" type="email" />
+        </label>
+
+        <div class="tolla-settings__actions">
+          <button type="submit" class="tolla-settings__button" [disabled]="profileSaving()">
+            {{ profileSaving() ? 'Saving...' : 'Save profile' }}
+          </button>
+        </div>
+
+        <p *ngIf="profileSuccess()" class="tolla-settings__success">{{ profileSuccess() }}</p>
+        <p *ngIf="profileError()" class="tolla-settings__error">{{ profileError() }}</p>
+      </form>
+
+      <form class="tolla-settings__card" [formGroup]="passwordForm" (ngSubmit)="onChangePassword()">
+        <div class="tolla-settings__card-header">
+          <div>
+            <h2 class="tolla-settings__section-title">Change password</h2>
+            <p class="tolla-settings__section-subtitle">Enter your current password and choose a new one.</p>
+          </div>
+        </div>
+
+        <label class="tolla-settings__field">
+          <span>Current password</span>
+          <input formControlName="currentPassword" type="password" />
+        </label>
+
+        <label class="tolla-settings__field">
+          <span>New password</span>
+          <input formControlName="newPassword" type="password" />
+        </label>
+
+        <label class="tolla-settings__field">
+          <span>Confirm new password</span>
+          <input formControlName="confirmPassword" type="password" />
+        </label>
+
+        <div class="tolla-settings__actions">
+          <button type="submit" class="tolla-settings__button" [disabled]="passwordChanging()">
+            {{ passwordChanging() ? 'Updating...' : 'Change password' }}
+          </button>
+        </div>
+
+        <p *ngIf="passwordSuccess()" class="tolla-settings__success">{{ passwordSuccess() }}</p>
+        <p *ngIf="passwordError()" class="tolla-settings__error">{{ passwordError() }}</p>
+      </form>
+    </section>
+  </div>
+</div>
