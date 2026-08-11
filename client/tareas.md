@@ -4,7 +4,7 @@ Espejo del tablero **Trello "Gestión de Productos — Sprint 1"** para consulta
 
 > ⚠️ **Este archivo es una referencia.** La fuente de verdad es el tablero de Trello; los avances/cambios de estado se actualizan allí.
 
-**Estado global del sprint:** `3 Hecho` · `4 En Progreso` · `4 Por hacer` · `0 Revisión`
+**Estado global del sprint:** `4 Hecho` · `3 En Progreso` · `4 Por hacer` · `0 Revisión`
 
 ---
 
@@ -40,17 +40,17 @@ Espejo del tablero **Trello "Gestión de Productos — Sprint 1"** para consulta
 - [x] Revenue = Σ (precio × stock) formateado.
 - [x] Uncategorized = productos sin categoría.
 
----
-
-## 🔵 En Progreso
-
 ### HU-02 [Estiven] — Home: listado, búsqueda y paginación
 > Como visitante quiero ver el catálogo de productos y poder buscarlos desde el Home.
 
 - [x] `GET /products` carga el listado inicial.
 - [x] La barra de búsqueda usa `GET /products?search=` y filtra por nombre y descripción.
-- [ ] **Paginación con `?page` y `?limit` usando `total`/`totalPages` de la respuesta.**
+- [x] Paginación con `?page` y `?limit` usando `total`/`totalPages` de la respuesta.
 - [x] Estados de carga y vacío visibles.
+
+---
+
+## 🔵 En Progreso
 
 ### HU-07 [Valen] — CRUD de categorías (Ontología)
 > Como usuario autenticado quiero gestionar las categorías de la ontología.
