@@ -181,7 +181,12 @@
       (click)="onSave()"
       [disabled]="form.invalid || saving()"
     >
-      {{ saving() ? 'Committing…' : 'Commit Changes' }}
+      @if (saving()) {
+        <span class="tolla-edit__spinner" aria-hidden="true"></span>
+        Committing…
+      } @else {
+        Commit Changes
+      }
     </button>
   </footer>
 </aside>
