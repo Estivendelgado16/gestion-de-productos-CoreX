@@ -1,0 +1,59 @@
+<div class="tolla-form-page">
+  <div class="tolla-form-page__head">
+    <div>
+      <h1 class="tolla-form-page__eyebrow">
+        {{ isEdit() ? '// EDIT CATEGORY' : '// NEW CATEGORY' }}
+      </h1>
+      <p class="tolla-form-page__hint">
+        {{ isEdit() ? 'UPDATE THE CATEGORY NODE' : 'CREATE A NEW CATEGORY NODE' }}
+      </p>
+    </div>
+    <a routerLink="/categories" class="tolla-form-page__back">← BACK</a>
+  </div>
+
+  <form
+    class="tolla-form"
+    [formGroup]="form"
+    (ngSubmit)="onSave()"
+    novalidate
+  >
+    @if (loading()) {
+      <div class="tolla-form__loading">LOADING CATEGORY…</div>
+    } @else {
+      <label class="tolla-form__field">
+        <span class="tolla-form__label">NAME</span>
+        <input
+          class="tolla-form__input"
+          type="text"
+          formControlName="name"
+          placeholder="Category name"
+        />
+      </label>
+
+      <label class="tolla-form__field">
+        <span class="tolla-form__label">DESCRIPTION</span>
+        <textarea
+          class="tolla-form__input"
+          rows="3"
+          formControlName="description"
+          placeholder="Optional description"
+        ></textarea>
+      </label>
+
+      @if (error()) {
+        <div class="tolla-form__error">{{ error() }}</div>
+      }
+
+      <div class="tolla-form__actions">
+        <button
+          type="submit"
+          class="tolla-form__btn tolla-form__btn--ghost"
+          [disabled]="saving()"
+        >
+          {{ saving() ? 'SAVING…' : 'SAVE' }}
+        </button>
+        <a routerLink="/categories" class="tolla-form__btn">CANCEL</a>
+      </div>
+    }
+  </form>
+</div>

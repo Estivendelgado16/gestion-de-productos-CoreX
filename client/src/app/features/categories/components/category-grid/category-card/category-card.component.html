@@ -17,11 +17,13 @@
       <span class="tolla-cat__meta-label">UPDATED</span>
       <span class="tolla-cat__meta-value">{{ category.updatedAt | date: 'short' }}</span>
     </span>
-    <button type="button" class="tolla-cat__edit" (click)="onEdit(); $event.stopPropagation()">
-      Edit
-    </button>
-  <button type="button" class="tolla-cat__delete" (click)="onDelete(); $event.stopPropagation()">
-      Delete
-    </button>
+    <div class="tolla-cat__actions">
+      <button type="button" class="tolla-cat__edit" (click)="onEdit(); $event.stopPropagation()">
+        Edit
+      </button>
+      <button type="button" class="tolla-cat__delete" (click)="onDelete(); $event.stopPropagation()">
+        Delete
+      </button>
+    </div>
   </div>
 </article>

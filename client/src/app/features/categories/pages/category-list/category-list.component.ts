@@ -1,64 +1,69 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { getApiErrorMessage } from '../../../../core/utils/api-error-message';
 import { Category } from '../../../../models/category.model';
 import { CategoryService } from '../../../../services/category.service';
 import { CategoryGridComponent } from '../../components/category-grid/category-grid/category-grid.component';
-import {
-  QuickEditMode,
-  QuickEditPanelComponent,
-} from '../../components/quick-edit/quick-edit-panel.component';
 
 @Component({
   selector: 'tolla-category-list',
-  imports: [CategoryGridComponent, QuickEditPanelComponent],
+  imports: [CategoryGridComponent, RouterLink],
   templateUrl: './category-list.component.html',
   styleUrl: './category-list.component.scss',
 })
 export class CategoryListComponent implements OnInit {
   private readonly categoryService: CategoryService = inject(CategoryService);
+  private readonly router: Router = inject(Router);
+  private readonly route: ActivatedRoute = inject(ActivatedRoute);
 
   readonly categories = signal<Category[]>([]);
   readonly loading = signal<boolean>(true);
   readonly loadError = signal<string | null>(null);
   readonly success = signal<string | null>(null);
 
-  readonly quickEditOpen = signal<boolean>(false);
-  readonly quickEditMode = signal<QuickEditMode>('create');
-  readonly selectedCategory = signal<Category | null>(null);
-
   ngOnInit(): void {
+    this.showSavedMessage();
+    this.clearSavedQuery();
     this.loadCategories();
+  }
+
+  private showSavedMessage(): void {
+    const saved = this.route.snapshot.queryParamMap.get('saved');
+
+    if (saved === 'created') {
+      this.success.set('Category created successfully.');
+    } else if (saved === 'updated') {
+      this.success.set('Category updated successfully.');
+    }
+  }
+
+  private clearSavedQuery(): void {
+    if (this.route.snapshot.queryParamMap.has('saved')) {
+      void this.router.navigate([], {
+        replaceUrl: true,
+        queryParams: {},
+      });
+    }
   }
 
   onCreate(): void {
-    this.quickEditMode.set('create');
-    this.selectedCategory.set(null);
-    this.quickEditOpen.set(true);
+    void this.router.navigate(['/categories/new']);
   }
 
   onCategoryEdit(category: Category): void {
-    this.quickEditMode.set('edit');
-    this.selectedCategory.set(category);
-    this.quickEditOpen.set(true);
+    void this.router.navigate(['/categories', category.id, 'edit']);
   }
 
-  onNodeSaved(_savedCategory: Category): void {
-    this.quickEditOpen.set(false);
-    this.selectedCategory.set(null);
-    this.success.set('Category saved successfully.');
-    this.loadCategories();
-  }
-
-  onDiscard(): void {
-    this.quickEditOpen.set(false);
-    this.selectedCategory.set(null);
-  }
-
-
-  onCategoryDelete(categoryId: string): void {
-    this.categoryService.deleteCategory(categoryId).subscribe({
-      next: () => this.loadCategories(),
+  onCategoryDelete(category: Category): void {
+    this.categoryService.deleteCategory(category.id).subscribe({
+      next: () => {
+        this.success.set('Category deleted successfully.');
+        this.loadCategories();
+      },
+      error: (error: unknown) => {
+        this.loadError.set(getApiErrorMessage(error, 'Unable to delete category.'));
+      },
     });
   }
 
