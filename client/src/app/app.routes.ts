@@ -46,6 +46,20 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'categories/new',
+        loadComponent: () =>
+          import('./features/categories/pages/category-form/category-form.component').then(
+            (m) => m.CategoryFormComponent,
+          ),
+      },
+      {
+        path: 'categories/:id/edit',
+        loadComponent: () =>
+          import('./features/categories/pages/category-form/category-form.component').then(
+            (m) => m.CategoryFormComponent,
+          ),
+      },
+      {
         path: 'favorites',
         loadComponent: () =>
           import('./features/favorites/pages/favorite-list/favorite-list.component').then(

@@ -103,24 +103,45 @@
     color: var(--tolla-text-secondary);
   }
 
-  &__edit {
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__edit,
+  &__delete {
     font-family: var(--tolla-font-display);
     font-size: 10px;
     font-weight: 700;
     letter-spacing: 0.15em;
     text-transform: uppercase;
-    color: var(--tolla-cyan);
     background: transparent;
-    border: 1px solid var(--tolla-border-strong);
     border-radius: var(--tolla-radius-sm);
     padding: 6px 12px;
     cursor: pointer;
     transition: all var(--tolla-transition);
+  }
+
+  &__edit {
+    color: var(--tolla-cyan);
+    border: 1px solid var(--tolla-border-strong);
 
     &:hover {
       background: var(--tolla-cyan);
       color: var(--tolla-bg-base);
       box-shadow: 0 0 14px var(--tolla-glow-cyan);
+    }
+  }
+
+  &__delete {
+    color: var(--tolla-magenta);
+    border: 1px solid rgba(255, 42, 109, 0.45);
+
+    &:hover {
+      background: var(--tolla-magenta);
+      color: var(--tolla-bg-base);
+      box-shadow: 0 0 14px var(--tolla-glow-magenta);
     }
   }
 }

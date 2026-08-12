@@ -43,6 +43,7 @@ __screenshots__/
 .DS_Store
 Thumbs.db
 
+# Environment files
 .env
 .env.development.local
 .env.test.local
