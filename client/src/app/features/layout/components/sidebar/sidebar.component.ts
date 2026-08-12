@@ -20,5 +20,6 @@ export class SidebarComponent {
     { id: 'products', label: 'Products', icon: 'box', route: '/products' },
     { id: 'categories', label: 'Categories', icon: 'network', route: '/categories' },
     { id: 'favorites', label: 'Favorites', icon: 'star', route: '/favorites' },
+    { id: 'settings', label: 'Settings', icon: 'cog', route: '/settings' },
   ];
 }
