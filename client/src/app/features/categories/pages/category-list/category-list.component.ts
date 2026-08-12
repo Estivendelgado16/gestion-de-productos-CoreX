@@ -55,6 +55,13 @@ export class CategoryListComponent implements OnInit {
     this.selectedCategory.set(null);
   }
 
+
+  onCategoryDelete(categoryId: string): void {
+    this.categoryService.deleteCategory(categoryId).subscribe({
+      next: () => this.loadCategories(),
+    });
+  }
+
   private loadCategories(): void {
     this.loading.set(true);
     this.loadError.set(null);

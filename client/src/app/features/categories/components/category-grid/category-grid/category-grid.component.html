@@ -28,6 +28,7 @@
           [index]="i"
           (selected)="onSelect($event)"
           (edit)="onEdit($event)"
+          (delete)="onDelete($event)"
         />
       }
       <tolla-create-node-card (createNode)="onCreate()" />

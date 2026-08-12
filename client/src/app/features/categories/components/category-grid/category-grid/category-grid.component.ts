@@ -18,6 +18,7 @@ export class CategoryGridComponent {
   @Output() categorySelected = new EventEmitter<Category>();
   @Output() categoryEdit = new EventEmitter<Category>();
   @Output() createNode = new EventEmitter<void>();
+  @Output() categoryDelete = new EventEmitter<Category>();
 
   onSelect(category: Category): void {
     this.categorySelected.emit(category);
@@ -29,5 +30,8 @@ export class CategoryGridComponent {
 
   onCreate(): void {
     this.createNode.emit();
+  }
+  onDelete(category: Category): void {
+    this.categoryDelete.emit(category);
   }
 }
