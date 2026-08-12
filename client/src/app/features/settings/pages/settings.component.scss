@@ -1,89 +1,162 @@
 .tolla-settings {
-  display: grid;
-  gap: 2rem;
-  padding: 2rem;
-}
-
-.tolla-settings__hero {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 1rem;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 1040px;
+  margin: 0 auto;
+
+  &__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  &__eyebrow {
+    font-family: var(--tolla-font-display);
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--tolla-text-primary);
+    margin: 0;
+  }
+
+  &__hint {
+    font-family: var(--tolla-font-mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    color: var(--tolla-text-muted);
+    margin: 6px 0 0;
+  }
+
+  &__panel,
+  &__skeleton,
+  &__error {
+    border: 1px solid var(--tolla-border-faint);
+    border-radius: var(--tolla-radius-lg);
+    background: var(--tolla-bg-card);
+  }
+
+  &__panel {
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  &__profile-head {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--tolla-border-faint);
+  }
+
+  &__avatar {
+    width: 56px;
+    height: 56px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--tolla-border);
+    border-radius: var(--tolla-radius-md);
+    background: var(--tolla-bg-input);
+    color: var(--tolla-cyan);
+    font-family: var(--tolla-font-display);
+    font-size: 22px;
+    font-weight: 800;
+    box-shadow: 0 0 18px rgba(0, 229, 255, 0.08);
+  }
+
+  &__title {
+    margin: 0;
+    color: var(--tolla-text-primary);
+    font-family: var(--tolla-font-display);
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  &__subtitle {
+    margin: 6px 0 0;
+    color: var(--tolla-text-muted);
+    font-family: var(--tolla-font-mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+
+    @media (max-width: 760px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__field {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px;
+    border: 1px solid var(--tolla-border-faint);
+    border-radius: var(--tolla-radius-md);
+    background: var(--tolla-bg-input);
+  }
+
+  &__label {
+    color: var(--tolla-text-muted);
+    font-family: var(--tolla-font-mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  &__value {
+    color: var(--tolla-text-primary);
+    font-size: 17px;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+
+    &--mono {
+      font-family: var(--tolla-font-mono);
+      font-size: 12px;
+      color: var(--tolla-cyan);
+    }
+  }
+
+  &__skeleton {
+    height: 260px;
+    background: linear-gradient(
+      90deg,
+      var(--tolla-bg-card) 25%,
+      var(--tolla-bg-hover) 50%,
+      var(--tolla-bg-card) 75%
+    );
+    background-size: 200% 100%;
+    animation: tolla-settings-shimmer 1.4s infinite;
+  }
+
+  &__error {
+    padding: 18px;
+    color: var(--tolla-magenta);
+    font-family: var(--tolla-font-mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+  }
 }
 
-.tolla-settings__eyebrow {
-  color: #7c8a9d;
-  letter-spacing: 0.35em;
-  text-transform: uppercase;
-  font-size: 0.8rem;
-  margin-bottom: 0.75rem;
-}
+@keyframes tolla-settings-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
 
-.tolla-settings__title {
-  margin: 0;
-  font-size: clamp(2rem, 2.5vw, 3rem);
-}
-
-.tolla-settings__subtitle {
-  max-width: 50rem;
-  color: #adb5c7;
-  margin-top: 0.75rem;
-}
-
-.tolla-settings__back-link {
-  color: #8be9fd;
-  text-decoration: none;
-  font-weight: 600;
-}
-
-.tolla-settings__content {
-  display: grid;
-  gap: 1.5rem;
-}
-
-.tolla-settings__loading,
-.tolla-settings__error {
-  color: #f8f8f2;
-  background: rgba(255, 255, 255, 0.04);
-  border-radius: 1rem;
-  padding: 1rem 1.25rem;
-}
-
-.tolla-settings__error {
-  color: #ff75a0;
-}
-
-.tolla-settings__profile {
-  display: grid;
-}
-
-.tolla-settings__card {
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 1.5rem;
-  padding: 2rem;
-  background: rgba(10, 14, 23, 0.88);
-}
-
-.tolla-settings__section-title {
-  margin: 0 0 1.5rem;
-  font-size: 1.25rem;
-}
-
-.tolla-settings__fields {
-  display: grid;
-  gap: 1rem;
-}
-
-.tolla-settings__fields dt {
-  font-size: 0.8rem;
-  color: #7c8a9d;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  margin-bottom: 0.25rem;
-}
-
-.tolla-settings__fields dd {
-  margin: 0;
-  font-size: 1rem;
-  color: #f8f8f2;
+  100% {
+    background-position: -200% 0;
+  }
 }

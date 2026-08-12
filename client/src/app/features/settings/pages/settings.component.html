@@ -1,81 +1,53 @@
 <div class="tolla-settings">
-  <section class="tolla-settings__hero">
+  <div class="tolla-settings__head">
     <div>
-      <p class="tolla-settings__eyebrow">// USER PROFILE</p>
-      <h1 class="tolla-settings__title">Account settings</h1>
-      <p class="tolla-settings__subtitle">
-        Update your profile details and change your password whenever you need.
-      </p>
+      <h1 class="tolla-settings__eyebrow">// SETTINGS</h1>
+      <p class="tolla-settings__hint">ACCOUNT INFORMATION</p>
     </div>
-    <a routerLink="/dashboard" class="tolla-settings__back-link">← Back to dashboard</a>
-  </section>
-
-  <div class="tolla-settings__content">
-    <div *ngIf="loading()" class="tolla-settings__loading">Loading profile...</div>
-    <div *ngIf="!loading() && profileError()" class="tolla-settings__error">{{ profileError() }}</div>
-
-    <section *ngIf="!loading() && user() as profile" class="tolla-settings__profile">
-      <form class="tolla-settings__card" [formGroup]="profileForm" (ngSubmit)="onSaveProfile()">
-        <div class="tolla-settings__card-header">
-          <div>
-            <h2 class="tolla-settings__section-title">Profile information</h2>
-            <p class="tolla-settings__section-subtitle">Edit your name and email address.</p>
-          </div>
-          <span class="tolla-settings__user-id">ID: {{ profile.id }}</span>
-        </div>
-
-        <label class="tolla-settings__field">
-          <span>Name</span>
-          <input formControlName="name" type="text" />
-        </label>
-
-        <label class="tolla-settings__field">
-          <span>Email</span>
-          <input formControlName="email" type="email" />
-        </label>
-
-        <div class="tolla-settings__actions">
-          <button type="submit" class="tolla-settings__button" [disabled]="profileSaving()">
-            {{ profileSaving() ? 'Saving...' : 'Save profile' }}
-          </button>
-        </div>
-
-        <p *ngIf="profileSuccess()" class="tolla-settings__success">{{ profileSuccess() }}</p>
-        <p *ngIf="profileError()" class="tolla-settings__error">{{ profileError() }}</p>
-      </form>
-
-      <form class="tolla-settings__card" [formGroup]="passwordForm" (ngSubmit)="onChangePassword()">
-        <div class="tolla-settings__card-header">
-          <div>
-            <h2 class="tolla-settings__section-title">Change password</h2>
-            <p class="tolla-settings__section-subtitle">Enter your current password and choose a new one.</p>
-          </div>
-        </div>
-
-        <label class="tolla-settings__field">
-          <span>Current password</span>
-          <input formControlName="currentPassword" type="password" />
-        </label>
-
-        <label class="tolla-settings__field">
-          <span>New password</span>
-          <input formControlName="newPassword" type="password" />
-        </label>
-
-        <label class="tolla-settings__field">
-          <span>Confirm new password</span>
-          <input formControlName="confirmPassword" type="password" />
-        </label>
-
-        <div class="tolla-settings__actions">
-          <button type="submit" class="tolla-settings__button" [disabled]="passwordChanging()">
-            {{ passwordChanging() ? 'Updating...' : 'Change password' }}
-          </button>
-        </div>
-
-        <p *ngIf="passwordSuccess()" class="tolla-settings__success">{{ passwordSuccess() }}</p>
-        <p *ngIf="passwordError()" class="tolla-settings__error">{{ passwordError() }}</p>
-      </form>
-    </section>
   </div>
+
+  @if (loading() && !user()) {
+    <div class="tolla-settings__skeleton"></div>
+  } @else if (error() && !user()) {
+    <div class="tolla-settings__error">{{ error() }}</div>
+  } @else if (user()) {
+    <section class="tolla-settings__panel" aria-labelledby="profile-title">
+      <div class="tolla-settings__profile-head">
+        <span class="tolla-settings__avatar" aria-hidden="true">
+          {{ user()?.name?.charAt(0)?.toUpperCase() || 'U' }}
+        </span>
+        <div>
+          <h2 id="profile-title" class="tolla-settings__title">{{ user()?.name }}</h2>
+          <p class="tolla-settings__subtitle">Registered account</p>
+        </div>
+      </div>
+
+      <div class="tolla-settings__grid">
+        <div class="tolla-settings__field">
+          <span class="tolla-settings__label">Name</span>
+          <span class="tolla-settings__value">{{ user()?.name }}</span>
+        </div>
+
+        <div class="tolla-settings__field">
+          <span class="tolla-settings__label">Email</span>
+          <span class="tolla-settings__value">{{ user()?.email }}</span>
+        </div>
+
+        <div class="tolla-settings__field">
+          <span class="tolla-settings__label">Password</span>
+          <span class="tolla-settings__value">Protected</span>
+        </div>
+
+        <div class="tolla-settings__field">
+          <span class="tolla-settings__label">User ID</span>
+          <span class="tolla-settings__value tolla-settings__value--mono">{{ user()?.id }}</span>
+        </div>
+
+        <div class="tolla-settings__field">
+          <span class="tolla-settings__label">Created At</span>
+          <span class="tolla-settings__value">{{ user()?.createdAt | date: 'medium' }}</span>
+        </div>
+      </div>
+    </section>
+  }
 </div>

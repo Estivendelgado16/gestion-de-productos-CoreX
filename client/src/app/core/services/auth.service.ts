@@ -4,12 +4,9 @@ import { Observable, tap } from 'rxjs';
 
 import {
   AuthResponse,
-  ChangePasswordPayload,
-  ChangePasswordResponse,
   LoginPayload,
   LogoutResponse,
   RegisterPayload,
-  UpdateProfilePayload,
 } from '../../models/auth.model';
 import { User } from '../../models/user.model';
 import { API_BASE_URL, AUTH_TOKEN_KEY, AUTH_USER_KEY } from '../config/api.config';
@@ -41,18 +38,6 @@ export class AuthService {
 
   getCurrentUser(): Observable<User> {
     return this.http.get<User>(this.profileUrl);
-  }
-
-  updateProfile(payload: UpdateProfilePayload): Observable<User> {
-    return this.http.patch<User>(this.profileUrl, payload).pipe(
-      tap((user: User) => {
-        localStorage.setItem(AUTH_USER_KEY, JSON.stringify(user));
-      }),
-    );
-  }
-
-  changePassword(payload: ChangePasswordPayload): Observable<ChangePasswordResponse> {
-    return this.http.post<ChangePasswordResponse>(`${this.baseUrl}/change-password`, payload);
   }
 
   getToken(): string | null {
