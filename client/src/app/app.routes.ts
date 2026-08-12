@@ -52,6 +52,13 @@ export const routes: Routes = [
             (m) => m.FavoriteListComponent,
           ),
       },
+      {
+        path: 'settings',
+        loadComponent: () =>
+          import('./features/settings/pages/settings.component').then(
+            (m) => m.SettingsComponent,
+          ),
+      },
     ],
   },
   { path: '**', redirectTo: 'dashboard' },

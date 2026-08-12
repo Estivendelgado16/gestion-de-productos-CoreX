@@ -1,0 +1,154 @@
+<div class="tolla-settings">
+  <div class="tolla-settings__head">
+    <div>
+      <h1 class="tolla-settings__eyebrow">// SETTINGS</h1>
+      <p class="tolla-settings__hint">ACCOUNT INFORMATION</p>
+    </div>
+  </div>
+
+  @if (loading() && !user()) {
+    <div class="tolla-settings__skeleton"></div>
+  } @else if (error() && !user()) {
+    <div class="tolla-settings__error">{{ error() }}</div>
+  } @else if (user()) {
+    <section class="tolla-settings__panel" aria-labelledby="profile-title">
+      <div class="tolla-settings__profile-head">
+        <span class="tolla-settings__avatar" aria-hidden="true">
+          {{ user()?.name?.charAt(0)?.toUpperCase() || 'U' }}
+        </span>
+        <div>
+          <h2 id="profile-title" class="tolla-settings__title">{{ user()?.name }}</h2>
+          <p class="tolla-settings__subtitle">Registered account</p>
+        </div>
+      </div>
+
+      <div class="tolla-settings__grid">
+        <div class="tolla-settings__field">
+          <span class="tolla-settings__label">Name</span>
+          <span class="tolla-settings__value">{{ user()?.name }}</span>
+        </div>
+
+        <div class="tolla-settings__field">
+          <span class="tolla-settings__label">Created At</span>
+          <span class="tolla-settings__value">{{ user()?.createdAt | date: 'medium' }}</span>
+        </div>
+
+        <div class="tolla-settings__field">
+          <span class="tolla-settings__label">Email</span>
+          <span class="tolla-settings__value">{{ user()?.email }}</span>
+        </div>
+
+        <div class="tolla-settings__field">
+          <span class="tolla-settings__label">Password</span>
+          <span class="tolla-settings__value">Protected</span>
+        </div>
+
+        <div class="tolla-settings__field">
+          <span class="tolla-settings__label">User ID</span>
+          <span class="tolla-settings__value tolla-settings__value--mono">{{ user()?.id }}</span>
+        </div>
+
+        <form
+          class="tolla-settings__password"
+          [formGroup]="passwordForm"
+          (ngSubmit)="onChangePassword()"
+          novalidate
+        >
+          <div class="tolla-settings__password-head">
+            <div>
+              <h3 class="tolla-settings__password-title">Update Password</h3>
+              <p class="tolla-settings__password-hint">Change your access key without leaving settings.</p>
+            </div>
+          </div>
+
+          <div class="tolla-settings__password-grid">
+            <label class="tolla-settings__input-field">
+              <span class="tolla-settings__label">Current Password</span>
+              <span class="tolla-settings__password-control">
+                <input
+                  class="tolla-settings__input tolla-settings__input--password"
+                  [type]="getPasswordInputType('currentPassword')"
+                  formControlName="currentPassword"
+                  autocomplete="current-password"
+                />
+                <button
+                  class="tolla-settings__password-toggle"
+                  type="button"
+                  (click)="togglePasswordVisibility('currentPassword')"
+                  [attr.aria-label]="isPasswordVisible('currentPassword') ? 'Hide current password' : 'Show current password'"
+                  [attr.title]="isPasswordVisible('currentPassword') ? 'Hide current password' : 'Show current password'"
+                >
+                  {{ isPasswordVisible('currentPassword') ? 'HIDE' : 'EYE' }}
+                </button>
+              </span>
+            </label>
+
+            <label class="tolla-settings__input-field">
+              <span class="tolla-settings__label">New Password</span>
+              <span class="tolla-settings__password-control">
+                <input
+                  class="tolla-settings__input tolla-settings__input--password"
+                  [type]="getPasswordInputType('newPassword')"
+                  formControlName="newPassword"
+                  autocomplete="new-password"
+                />
+                <button
+                  class="tolla-settings__password-toggle"
+                  type="button"
+                  (click)="togglePasswordVisibility('newPassword')"
+                  [attr.aria-label]="isPasswordVisible('newPassword') ? 'Hide new password' : 'Show new password'"
+                  [attr.title]="isPasswordVisible('newPassword') ? 'Hide new password' : 'Show new password'"
+                >
+                  {{ isPasswordVisible('newPassword') ? 'HIDE' : 'EYE' }}
+                </button>
+              </span>
+            </label>
+
+            <label class="tolla-settings__input-field">
+              <span class="tolla-settings__label">Confirm Password</span>
+              <span class="tolla-settings__password-control">
+                <input
+                  class="tolla-settings__input tolla-settings__input--password"
+                  [type]="getPasswordInputType('confirmPassword')"
+                  formControlName="confirmPassword"
+                  autocomplete="new-password"
+                />
+                <button
+                  class="tolla-settings__password-toggle"
+                  type="button"
+                  (click)="togglePasswordVisibility('confirmPassword')"
+                  [attr.aria-label]="isPasswordVisible('confirmPassword') ? 'Hide password confirmation' : 'Show password confirmation'"
+                  [attr.title]="isPasswordVisible('confirmPassword') ? 'Hide password confirmation' : 'Show password confirmation'"
+                >
+                  {{ isPasswordVisible('confirmPassword') ? 'HIDE' : 'EYE' }}
+                </button>
+              </span>
+            </label>
+          </div>
+
+          @if (passwordError()) {
+            <div class="tolla-settings__password-message tolla-settings__password-message--error">
+              {{ passwordError() }}
+            </div>
+          }
+
+          @if (passwordSuccess()) {
+            <div class="tolla-settings__password-message tolla-settings__password-message--success">
+              {{ passwordSuccess() }}
+            </div>
+          }
+
+          <div class="tolla-settings__password-actions">
+            <button
+              class="tolla-settings__button"
+              type="submit"
+              [disabled]="passwordForm.invalid || changingPassword()"
+            >
+              {{ changingPassword() ? 'UPDATING...' : 'UPDATE PASSWORD' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+  }
+</div>
