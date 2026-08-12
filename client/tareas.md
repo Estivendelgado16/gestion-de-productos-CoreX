@@ -4,7 +4,7 @@ Espejo del tablero **Trello "Gestión de Productos — Sprint 1"** para consulta
 
 > ⚠️ **Este archivo es una referencia.** La fuente de verdad es el tablero de Trello; los avances/cambios de estado se actualizan allí.
 
-**Estado global del sprint:** `3 Hecho` · `4 En Progreso` · `4 Por hacer` · `0 Revisión`
+**Estado global del sprint:** `4 Hecho` · `3 En Progreso` · `4 Por hacer` · `0 Revisión`
 
 ---
 
@@ -13,7 +13,6 @@ Espejo del tablero **Trello "Gestión de Productos — Sprint 1"** para consulta
 | Integrante | Miembro Trello |
 |---|---|
 | **Estiven** | Brallam Delgado |
-| **Jenn** | Jennifer López |
 | **Valen** | Valentina |
 | **Daniel** | José Daniel Gutiérrez |
 | **Juan** | Juan Carlos Vanegas Palencia |
@@ -34,23 +33,23 @@ Espejo del tablero **Trello "Gestión de Productos — Sprint 1"** para consulta
 - [x] Logout: `POST /auth/logout`, borra el token local y redirige a `/login`.
 - [x] Las rutas privadas redirigen a login si no hay token (guard).
 
-### HU-06 [Jenn] — KPIs del dashboard con datos reales
+### HU-06 [Estiven] — KPIs del dashboard con datos reales
 - [x] Total Categories = length de `GET /categories`.
 - [x] SKU Count = total de `GET /products`.
 - [x] Revenue = Σ (precio × stock) formateado.
 - [x] Uncategorized = productos sin categoría.
-
----
-
-## 🔵 En Progreso
 
 ### HU-02 [Estiven] — Home: listado, búsqueda y paginación
 > Como visitante quiero ver el catálogo de productos y poder buscarlos desde el Home.
 
 - [x] `GET /products` carga el listado inicial.
 - [x] La barra de búsqueda usa `GET /products?search=` y filtra por nombre y descripción.
-- [ ] **Paginación con `?page` y `?limit` usando `total`/`totalPages` de la respuesta.**
+- [x] Paginación con `?page` y `?limit` usando `total`/`totalPages` de la respuesta.
 - [x] Estados de carga y vacío visibles.
+
+---
+
+## 🔵 En Progreso
 
 ### HU-07 [Valen] — CRUD de categorías (Ontología)
 > Como usuario autenticado quiero gestionar las categorías de la ontología.
@@ -69,7 +68,7 @@ Espejo del tablero **Trello "Gestión de Productos — Sprint 1"** para consulta
 - [x] Quick-Edit conectado a `CategoryService` con spinner y mensajes de éxito/error.
 - [x] Estados de carga/vacío en todas las pantallas.
 
-### HU-05 [Jenn] — CRUD de productos
+### HU-05 [Estiven] — CRUD de productos
 > Como usuario autenticado quiero crear, editar y eliminar productos.
 
 - [ ] **`POST /products` crea con name, description?, price, stock, categoryId, images?.**
@@ -81,7 +80,7 @@ Espejo del tablero **Trello "Gestión de Productos — Sprint 1"** para consulta
 
 ## ⚪ Por hacer
 
-### HU-04 [Jenn] — Detalle de producto
+### HU-04 [Estiven] — Detalle de producto
 > Como usuario quiero ver el detalle completo de un producto.
 
 - [ ] `GET /products/:id` muestra nombre, descripción, precio y stock.
@@ -122,8 +121,7 @@ Espejo del tablero **Trello "Gestión de Productos — Sprint 1"** para consulta
 
 | Integrante | Hecho | En progreso | Por hacer |
 |---|---|---|---|
-| **Estiven** | HU-01, HU-03 | HU-02 | — |
-| **Jenn** | HU-06 | HU-05 | HU-04 |
+| **Estiven** | HU-01, HU-03, HU-02, HU-06 | HU-05 | HU-04 |
 | **Valen** | — | HU-07 | HU-08 |
 | **Daniel** | — | HU-11 | HU-09 |
 | **Juan** | — | — | HU-10 |
@@ -132,6 +130,6 @@ Espejo del tablero **Trello "Gestión de Productos — Sprint 1"** para consulta
 
 ## 📌 Notas del sprint
 
-- **Bloqueo cruzado:** HU-05 (Jenn) necesita el patrón de servicios de producto de HU-02 (Estiven). HU-08 (Valen) depende de HU-02 + HU-07.
+- **Bloqueo cruzado:** HU-05 (Estiven) necesita el patrón de servicios de producto de HU-02 (Estiven). HU-08 (Valen) depende de HU-02 + HU-07.
 - **Juan** tiene la única tarea 100% independiente (HU-10), ideal para integrarse sin presión.
 - Los criterios marcados `[ ]` (sin tilde) son los que faltan para dar por cerrada cada tarjeta.

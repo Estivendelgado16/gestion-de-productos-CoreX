@@ -9,6 +9,27 @@
     <a routerLink="/products/new" class="tolla-page__create">+ CREATE</a>
   </div>
 
+  <div class="tolla-page__search">
+    <input
+      class="tolla-page__search-input"
+      type="search"
+      placeholder="Search by name or description…"
+      [value]="searchTerm()"
+      (input)="onSearchInput($event)"
+      aria-label="Search products"
+    />
+    @if (searchTerm()) {
+      <button
+        type="button"
+        class="tolla-page__search-clear"
+        (click)="onClearSearch()"
+        aria-label="Clear search"
+      >
+        ×
+      </button>
+    }
+  </div>
+
   <div class="tolla-page__body">
     @if (loading()) {
       @for (skeleton of [1, 2, 3, 4]; track skeleton) {

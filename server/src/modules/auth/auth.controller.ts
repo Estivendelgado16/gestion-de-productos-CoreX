@@ -38,7 +38,9 @@ export class AuthController {
     description:
       'El token JWT es "stateless": esta ruta no revoca nada en el servidor, sirve como confirmación explícita antes de que el frontend elimine el token guardado (localStorage/sessionStorage).',
   })
-  @ApiOkResponse({ schema: { example: { message: 'Sesión cerrada correctamente' } } })
+  @ApiOkResponse({
+    schema: { example: { message: 'Sesión cerrada correctamente' } },
+  })
   logout() {
     return { message: 'Sesión cerrada correctamente' };
   }
