@@ -77,14 +77,12 @@ export class CategoryListComponent {
     });
   }
 
-    onCategoryDelete(categoryId: string): void {
+
+  onCategoryDelete(categoryId: string): void {
     this.categoryService.deleteCategory(categoryId).subscribe({
       next: () => this.loadCategories(),
     });
   }
-
-
-
 
   private loadCategories(): void {
     this.loading.set(true);

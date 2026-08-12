@@ -1,0 +1,14 @@
+<div class="tolla-layout">
+  <tolla-sidebar class="tolla-layout__sidebar" />
+  <div class="tolla-layout__main">
+    <tolla-header
+      class="tolla-layout__header"
+      [userName]="userName()"
+      [resultCount]="resultCount()"
+      (searchChanged)="onSearch($event)"
+    />
+    <main class="tolla-layout__content">
+      <router-outlet />
+    </main>
+  </div>
+</div>
