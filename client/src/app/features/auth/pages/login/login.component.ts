@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -16,12 +16,13 @@ interface LoginForm {
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   private readonly authService: AuthService = inject(AuthService);
   private readonly router: Router = inject(Router);
 
   readonly isRegistering = signal<boolean>(false);
   readonly submitting = signal<boolean>(false);
+  readonly showPassword = signal<boolean>(false);
   readonly error = signal<string | null>(null);
 
   readonly form: FormGroup<LoginForm> = new FormGroup<LoginForm>({
@@ -36,10 +37,18 @@ export class LoginComponent {
     }),
   });
 
+  ngOnInit(): void {
+    this.syncNameValidators();
+  }
+
   toggleMode(): void {
     this.isRegistering.update((value: boolean) => !value);
     this.error.set(null);
     this.updateNameValidation();
+  }
+
+  togglePasswordVisibility(): void {
+    this.showPassword.update((value: boolean) => !value);
   }
 
   private updateNameValidation(): void {
@@ -92,5 +101,18 @@ export class LoginComponent {
       }
     }
     return 'Authentication failed. Please check your credentials.';
+  }
+
+  private syncNameValidators(): void {
+    const nameControl = this.form.controls.name;
+
+    if (this.isRegistering()) {
+      nameControl.setValidators([Validators.required, Validators.minLength(2)]);
+    } else {
+      nameControl.clearValidators();
+      nameControl.setValue('');
+    }
+
+    nameControl.updateValueAndValidity();
   }
 }

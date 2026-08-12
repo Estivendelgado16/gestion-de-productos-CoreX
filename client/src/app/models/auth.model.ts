@@ -20,4 +20,10 @@ export interface MessageResponse {
   message: string;
 }
 
+export interface ChangePasswordPayload {
+  currentPassword: string;
+  newPassword: string;
+}
+
+export type ChangePasswordResponse = MessageResponse;
 export type LogoutResponse = MessageResponse;
