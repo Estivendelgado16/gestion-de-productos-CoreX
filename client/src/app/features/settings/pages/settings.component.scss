@@ -164,6 +164,11 @@
     gap: 8px;
   }
 
+  &__password-control {
+    position: relative;
+    display: block;
+  }
+
   &__input {
     width: 100%;
     min-height: 42px;
@@ -182,6 +187,40 @@
     &:focus {
       border-color: var(--tolla-cyan);
       box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.08);
+    }
+  }
+
+  &__input--password {
+    padding-right: 70px;
+  }
+
+  &__password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+    min-width: 48px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--tolla-border);
+    border-radius: var(--tolla-radius-sm);
+    background: var(--tolla-bg-deep);
+    color: var(--tolla-cyan);
+    font-family: var(--tolla-font-mono);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition:
+      border-color var(--tolla-transition),
+      background var(--tolla-transition),
+      color var(--tolla-transition);
+
+    &:hover {
+      border-color: var(--tolla-cyan);
+      background: rgba(0, 229, 255, 0.08);
     }
   }
 

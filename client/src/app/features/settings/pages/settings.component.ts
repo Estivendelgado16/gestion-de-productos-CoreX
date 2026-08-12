@@ -17,6 +17,8 @@ interface PasswordFormControls {
   confirmPassword: FormControl<string>;
 }
 
+type PasswordField = 'currentPassword' | 'newPassword' | 'confirmPassword';
+
 @Component({
   selector: 'tolla-settings',
   imports: [DatePipe, ReactiveFormsModule],
@@ -32,6 +34,11 @@ export class SettingsComponent implements OnInit {
   readonly changingPassword = signal<boolean>(false);
   readonly passwordError = signal<string | null>(null);
   readonly passwordSuccess = signal<string | null>(null);
+  readonly visiblePasswordFields = signal<Record<PasswordField, boolean>>({
+    currentPassword: false,
+    newPassword: false,
+    confirmPassword: false,
+  });
 
   readonly passwordForm: FormGroup<PasswordFormControls> = new FormGroup<PasswordFormControls>({
     currentPassword: new FormControl<string>('', {
@@ -106,6 +113,21 @@ export class SettingsComponent implements OnInit {
         this.passwordError.set(this.extractErrorMessage(err));
       },
     });
+  }
+
+  getPasswordInputType(field: PasswordField): 'password' | 'text' {
+    return this.visiblePasswordFields()[field] ? 'text' : 'password';
+  }
+
+  isPasswordVisible(field: PasswordField): boolean {
+    return this.visiblePasswordFields()[field];
+  }
+
+  togglePasswordVisibility(field: PasswordField): void {
+    this.visiblePasswordFields.update((fields: Record<PasswordField, boolean>) => ({
+      ...fields,
+      [field]: !fields[field],
+    }));
   }
 
   private extractErrorMessage(err: unknown): string {

@@ -32,12 +32,23 @@
 
       <label class="tolla-login__field">
         <span class="tolla-login__label">Password</span>
-        <input
-          class="tolla-login__input"
-          type="password"
-          formControlName="password"
-          placeholder="••••••••"
-        />
+        <span class="tolla-login__password-control">
+          <input
+            class="tolla-login__input tolla-login__input--password"
+            [type]="showPassword() ? 'text' : 'password'"
+            formControlName="password"
+            placeholder="••••••••"
+          />
+          <button
+            class="tolla-login__password-toggle"
+            type="button"
+            (click)="togglePasswordVisibility()"
+            [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'"
+            [attr.title]="showPassword() ? 'Hide password' : 'Show password'"
+          >
+            {{ showPassword() ? 'HIDE' : 'EYE' }}
+          </button>
+        </span>
       </label>
 
       @if (error()) {

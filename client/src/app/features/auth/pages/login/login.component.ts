@@ -22,6 +22,7 @@ export class LoginComponent implements OnInit {
 
   readonly isRegistering = signal<boolean>(false);
   readonly submitting = signal<boolean>(false);
+  readonly showPassword = signal<boolean>(false);
   readonly error = signal<string | null>(null);
 
   readonly form: FormGroup<LoginForm> = new FormGroup<LoginForm>({
@@ -46,7 +47,12 @@ export class LoginComponent implements OnInit {
   toggleMode(): void {
     this.isRegistering.update((value: boolean) => !value);
     this.error.set(null);
+    this.showPassword.set(false);
     this.syncNameValidators();
+  }
+
+  togglePasswordVisibility(): void {
+    this.showPassword.update((value: boolean) => !value);
   }
 
   onSubmit(): void {
