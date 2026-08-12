@@ -89,6 +89,22 @@
     padding: 20px 0;
   }
 
+  &__error {
+    font-size: 14px;
+    padding: 14px;
+    color: var(--tolla-magenta);
+    border: 1px solid var(--tolla-magenta);
+    border-radius: var(--tolla-radius-md);
+
+    p {
+      margin: 0;
+    }
+
+    p + p {
+      margin-top: 8px;
+    }
+  }
+
   &__links {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));

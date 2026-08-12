@@ -5,7 +5,8 @@ import { IsInt, IsOptional, IsString, IsUUID, Min } from 'class-validator';
 export class QueryProductDto {
   @ApiPropertyOptional({
     example: 'audifonos',
-    description: 'Texto de búsqueda: filtra por nombre o descripción del producto',
+    description:
+      'Texto de búsqueda: filtra por nombre o descripción del producto',
   })
   @IsOptional()
   @IsString()

@@ -13,10 +13,12 @@ import { CreateNodeCardComponent } from '../create-node-card/create-node-card.co
 export class CategoryGridComponent {
   @Input({ required: true }) categories: Category[] = [];
   @Input() loading: boolean = false;
+  @Input() error: string | null = null;
 
   @Output() categorySelected = new EventEmitter<Category>();
   @Output() categoryEdit = new EventEmitter<Category>();
   @Output() createNode = new EventEmitter<void>();
+  @Output() categoryDelete = new EventEmitter<Category>();
 
   onSelect(category: Category): void {
     this.categorySelected.emit(category);
@@ -28,5 +30,8 @@ export class CategoryGridComponent {
 
   onCreate(): void {
     this.createNode.emit();
+  }
+  onDelete(category: Category): void {
+    this.categoryDelete.emit(category);
   }
 }

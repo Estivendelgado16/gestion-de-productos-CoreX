@@ -1,105 +1,81 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
 
+import { getApiErrorMessage } from '../../../../core/utils/api-error-message';
 import { Category } from '../../../../models/category.model';
 import { CategoryService } from '../../../../services/category.service';
-
-interface CategoryFormControls {
-  name: FormControl<string>;
-  description: FormControl<string | null>;
-}
+import { CategoryGridComponent } from '../../components/category-grid/category-grid/category-grid.component';
+import {
+  QuickEditMode,
+  QuickEditPanelComponent,
+} from '../../components/quick-edit/quick-edit-panel.component';
 
 @Component({
   selector: 'tolla-category-list',
-  imports: [ReactiveFormsModule],
+  imports: [CategoryGridComponent, QuickEditPanelComponent],
   templateUrl: './category-list.component.html',
   styleUrl: './category-list.component.scss',
 })
-export class CategoryListComponent {
+export class CategoryListComponent implements OnInit {
   private readonly categoryService: CategoryService = inject(CategoryService);
 
   readonly categories = signal<Category[]>([]);
   readonly loading = signal<boolean>(true);
-  readonly creating = signal<boolean>(false);
-  readonly saving = signal<boolean>(false);
-  readonly error = signal<string | null>(null);
+  readonly loadError = signal<string | null>(null);
+  readonly success = signal<string | null>(null);
 
-  readonly form: FormGroup<CategoryFormControls> = new FormGroup<CategoryFormControls>({
-    name: new FormControl<string>('', {
-      nonNullable: true,
-      validators: [Validators.required, Validators.minLength(2)],
-    }),
-    description: new FormControl<string | null>(null),
-  });
+  readonly quickEditOpen = signal<boolean>(false);
+  readonly quickEditMode = signal<QuickEditMode>('create');
+  readonly selectedCategory = signal<Category | null>(null);
 
   ngOnInit(): void {
     this.loadCategories();
   }
 
-  toggleCreate(): void {
-    this.creating.set(!this.creating());
-    this.error.set(null);
-    this.form.reset({ name: '', description: null });
+  onCreate(): void {
+    this.quickEditMode.set('create');
+    this.selectedCategory.set(null);
+    this.quickEditOpen.set(true);
   }
 
-  onSave(): void {
-    if (this.form.invalid || this.saving()) {
-      return;
-    }
+  onCategoryEdit(category: Category): void {
+    this.quickEditMode.set('edit');
+    this.selectedCategory.set(category);
+    this.quickEditOpen.set(true);
+  }
 
-    const payload: { name: string; description?: string } = {
-      name: this.form.controls.name.value.trim(),
-    };
-    const description = this.form.controls.description.value;
-    if (description !== null && description.trim() !== '') {
-      payload.description = description.trim();
-    }
+  onNodeSaved(_savedCategory: Category): void {
+    this.quickEditOpen.set(false);
+    this.selectedCategory.set(null);
+    this.success.set('Category saved successfully.');
+    this.loadCategories();
+  }
 
-    this.saving.set(true);
-    this.error.set(null);
+  onDiscard(): void {
+    this.quickEditOpen.set(false);
+    this.selectedCategory.set(null);
+  }
 
-    this.categoryService.createCategory(payload).subscribe({
-      next: () => {
-        this.saving.set(false);
-        this.creating.set(false);
-        this.form.reset({ name: '', description: null });
-        this.loadCategories();
-      },
-      error: (err: unknown) => {
-        this.saving.set(false);
-        this.error.set(this.extractErrorMessage(err));
-      },
+
+  onCategoryDelete(categoryId: string): void {
+    this.categoryService.deleteCategory(categoryId).subscribe({
+      next: () => this.loadCategories(),
     });
   }
 
   private loadCategories(): void {
     this.loading.set(true);
+    this.loadError.set(null);
 
     this.categoryService.getCategories().subscribe({
       next: (categories: Category[]) => {
         this.categories.set(categories);
         this.loading.set(false);
       },
-      error: () => {
+      error: (error: unknown) => {
         this.categories.set([]);
+        this.loadError.set(getApiErrorMessage(error, 'Unable to load categories.'));
         this.loading.set(false);
       },
     });
-  }
-
-  private extractErrorMessage(err: unknown): string {
-    if (typeof err === 'object' && err !== null && 'error' in err) {
-      const errorValue = (err as { error?: { message?: string | string[] } }).error;
-      if (errorValue?.message) {
-        const message = errorValue.message;
-        return Array.isArray(message) ? message.join(' · ') : message;
-      }
-    }
-    return 'An unexpected error occurred while saving the category.';
   }
 }

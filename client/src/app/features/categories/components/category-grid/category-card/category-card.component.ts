@@ -15,6 +15,7 @@ export class CategoryCardComponent {
 
   @Output() selected = new EventEmitter<Category>();
   @Output() edit = new EventEmitter<Category>();
+  @Output() delete = new EventEmitter<Category>();
 
   select(): void {
     this.selected.emit(this.category);
@@ -22,5 +23,9 @@ export class CategoryCardComponent {
 
   onEdit(): void {
     this.edit.emit(this.category);
+  }
+
+  onDelete(): void {
+    this.delete.emit(this.category);
   }
 }

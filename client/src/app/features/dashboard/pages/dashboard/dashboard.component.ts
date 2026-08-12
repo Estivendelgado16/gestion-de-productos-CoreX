@@ -1,6 +1,7 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
+import { getApiErrorMessage } from '../../../../core/utils/api-error-message';
 import { Category } from '../../../../models/category.model';
 import { KpiMetric } from '../../../../models/kpi.model';
 import { Product, ProductListResponse } from '../../../../models/product.model';
@@ -23,6 +24,8 @@ export class DashboardComponent implements OnInit {
   readonly totalProducts = signal<number>(0);
   readonly loadingCategories = signal<boolean>(true);
   readonly loadingProducts = signal<boolean>(true);
+  readonly categoriesError = signal<string | null>(null);
+  readonly productsError = signal<string | null>(null);
 
   readonly kpis = computed<KpiMetric[]>(() => this.buildKpis());
 
@@ -33,14 +36,16 @@ export class DashboardComponent implements OnInit {
 
   private loadCategories(): void {
     this.loadingCategories.set(true);
+    this.categoriesError.set(null);
 
     this.categoryService.getCategories().subscribe({
       next: (categories: Category[]) => {
         this.categories.set(categories);
         this.loadingCategories.set(false);
       },
-      error: () => {
+      error: (error: unknown) => {
         this.categories.set([]);
+        this.categoriesError.set(getApiErrorMessage(error, 'Unable to load categories.'));
         this.loadingCategories.set(false);
       },
     });
@@ -48,6 +53,7 @@ export class DashboardComponent implements OnInit {
 
   private loadProducts(): void {
     this.loadingProducts.set(true);
+    this.productsError.set(null);
 
     this.productService.getProducts({ limit: 100 }).subscribe({
       next: (response: ProductListResponse) => {
@@ -55,9 +61,10 @@ export class DashboardComponent implements OnInit {
         this.totalProducts.set(response.total);
         this.loadingProducts.set(false);
       },
-      error: () => {
+      error: (error: unknown) => {
         this.products.set([]);
         this.totalProducts.set(0);
+        this.productsError.set(getApiErrorMessage(error, 'Unable to load products.'));
         this.loadingProducts.set(false);
       },
     });
