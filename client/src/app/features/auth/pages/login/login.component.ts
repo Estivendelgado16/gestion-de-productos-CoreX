@@ -47,6 +47,10 @@ export class LoginComponent implements OnInit {
     this.updateNameValidation();
   }
 
+  togglePasswordVisibility(): void {
+    this.showPassword.update((value: boolean) => !value);
+  }
+
   private updateNameValidation(): void {
     const nameControl = this.form.controls.name;
 
