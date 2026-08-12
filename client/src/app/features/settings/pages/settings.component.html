@@ -29,6 +29,11 @@
         </div>
 
         <div class="tolla-settings__field">
+          <span class="tolla-settings__label">Created At</span>
+          <span class="tolla-settings__value">{{ user()?.createdAt | date: 'medium' }}</span>
+        </div>
+
+        <div class="tolla-settings__field">
           <span class="tolla-settings__label">Email</span>
           <span class="tolla-settings__value">{{ user()?.email }}</span>
         </div>
@@ -110,11 +115,6 @@
             </button>
           </div>
         </form>
-
-        <div class="tolla-settings__field">
-          <span class="tolla-settings__label">Created At</span>
-          <span class="tolla-settings__value">{{ user()?.createdAt | date: 'medium' }}</span>
-        </div>
       </div>
     </section>
   }
