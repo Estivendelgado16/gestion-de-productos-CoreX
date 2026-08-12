@@ -8,6 +8,16 @@
       </span>
     </div>
     <tolla-kpi-grid [kpis]="kpis()" />
+    @if (categoriesError() || productsError()) {
+      <div class="tolla-dashboard__error" role="alert">
+        @if (categoriesError()) {
+          <p>{{ categoriesError() }}</p>
+        }
+        @if (productsError()) {
+          <p>{{ productsError() }}</p>
+        }
+      </div>
+    }
   </section>
 
   <section class="tolla-dashboard__section">

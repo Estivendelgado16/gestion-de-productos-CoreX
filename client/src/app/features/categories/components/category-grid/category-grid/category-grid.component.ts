@@ -13,6 +13,7 @@ import { CreateNodeCardComponent } from '../create-node-card/create-node-card.co
 export class CategoryGridComponent {
   @Input({ required: true }) categories: Category[] = [];
   @Input() loading: boolean = false;
+  @Input() error: string | null = null;
 
   @Output() categorySelected = new EventEmitter<Category>();
   @Output() categoryEdit = new EventEmitter<Category>();

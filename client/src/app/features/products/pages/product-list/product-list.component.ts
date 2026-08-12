@@ -1,6 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
+import { getApiErrorMessage } from '../../../../core/utils/api-error-message';
 import { Product, ProductListResponse } from '../../../../models/product.model';
 import { ProductService } from '../../../../services/product.service';
 
@@ -19,6 +20,7 @@ export class ProductListComponent implements OnInit {
   readonly totalPages = signal<number>(1);
   readonly limit = signal<number>(10);
   readonly loading = signal<boolean>(true);
+  readonly error = signal<string | null>(null);
 
   ngOnInit(): void {
     this.loadProducts();
@@ -34,6 +36,7 @@ export class ProductListComponent implements OnInit {
 
   private loadProducts(): void {
     this.loading.set(true);
+    this.error.set(null);
 
     this.productService
       .getProducts({ page: this.currentPage(), limit: this.limit() })
@@ -44,10 +47,11 @@ export class ProductListComponent implements OnInit {
           this.totalPages.set(response.totalPages);
           this.loading.set(false);
         },
-        error: () => {
+        error: (error: unknown) => {
           this.products.set([]);
           this.totalProducts.set(0);
           this.totalPages.set(1);
+          this.error.set(getApiErrorMessage(error, 'Unable to load products.'));
           this.loading.set(false);
         },
       });
