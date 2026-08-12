@@ -1,35 +1,23 @@
-<div class="tolla-page" [class.tolla-page--edit]="quickEditOpen()">
-  <div class="tolla-page__main">
-    <div class="tolla-page__head">
-      <div>
-        <h1 class="tolla-page__eyebrow">// CATEGORIES</h1>
-        <p class="tolla-page__hint">{{ categories().length }} CATEGORIES</p>
-      </div>
-      <button type="button" class="tolla-page__create" (click)="onCreate()">
-        + CREATE
-      </button>
+<div class="tolla-page">
+  <div class="tolla-page__head">
+    <div>
+      <h1 class="tolla-page__eyebrow">// CATEGORIES</h1>
+      <p class="tolla-page__hint">{{ categories().length }} CATEGORIES</p>
     </div>
-
-    @if (success()) {
-      <div class="tolla-page__success" role="status">{{ success() }}</div>
-    }
-
-    <tolla-category-grid
-      [categories]="categories()"
-      [loading]="loading()"
-      [error]="loadError()"
-      (categorySelected)="onCategoryEdit($event)"
-      (categoryEdit)="onCategoryEdit($event)"
-      (createNode)="onCreate()"
-    />
+    <a routerLink="/categories/new" class="tolla-page__create">+ CREATE</a>
   </div>
 
-  @if (quickEditOpen()) {
-    <tolla-quick-edit-panel
-      [mode]="quickEditMode()"
-      [category]="selectedCategory()"
-      (saved)="onNodeSaved($event)"
-      (discard)="onDiscard()"
-    />
+  @if (success()) {
+    <div class="tolla-page__success" role="status">{{ success() }}</div>
   }
+
+  <tolla-category-grid
+    [categories]="categories()"
+    [loading]="loading()"
+    [error]="loadError()"
+    (categorySelected)="onCategoryEdit($event)"
+    (categoryEdit)="onCategoryEdit($event)"
+    (categoryDelete)="onCategoryDelete($event)"
+    (createNode)="onCreate()"
+  />
 </div>
