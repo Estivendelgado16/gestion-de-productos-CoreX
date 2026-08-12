@@ -4,6 +4,8 @@ import { Observable, tap } from 'rxjs';
 
 import {
   AuthResponse,
+  ChangePasswordPayload,
+  ChangePasswordResponse,
   LoginPayload,
   LogoutResponse,
   RegisterPayload,
@@ -38,6 +40,10 @@ export class AuthService {
 
   getCurrentUser(): Observable<User> {
     return this.http.get<User>(this.profileUrl);
+  }
+
+  changePassword(payload: ChangePasswordPayload): Observable<ChangePasswordResponse> {
+    return this.http.patch<ChangePasswordResponse>(`${this.profileUrl}/password`, payload);
   }
 
   getToken(): string | null {

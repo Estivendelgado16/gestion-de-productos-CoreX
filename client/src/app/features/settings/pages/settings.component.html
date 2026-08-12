@@ -43,6 +43,74 @@
           <span class="tolla-settings__value tolla-settings__value--mono">{{ user()?.id }}</span>
         </div>
 
+        <form
+          class="tolla-settings__password"
+          [formGroup]="passwordForm"
+          (ngSubmit)="onChangePassword()"
+          novalidate
+        >
+          <div class="tolla-settings__password-head">
+            <div>
+              <h3 class="tolla-settings__password-title">Update Password</h3>
+              <p class="tolla-settings__password-hint">Change your access key without leaving settings.</p>
+            </div>
+          </div>
+
+          <div class="tolla-settings__password-grid">
+            <label class="tolla-settings__input-field">
+              <span class="tolla-settings__label">Current Password</span>
+              <input
+                class="tolla-settings__input"
+                type="password"
+                formControlName="currentPassword"
+                autocomplete="current-password"
+              />
+            </label>
+
+            <label class="tolla-settings__input-field">
+              <span class="tolla-settings__label">New Password</span>
+              <input
+                class="tolla-settings__input"
+                type="password"
+                formControlName="newPassword"
+                autocomplete="new-password"
+              />
+            </label>
+
+            <label class="tolla-settings__input-field">
+              <span class="tolla-settings__label">Confirm Password</span>
+              <input
+                class="tolla-settings__input"
+                type="password"
+                formControlName="confirmPassword"
+                autocomplete="new-password"
+              />
+            </label>
+          </div>
+
+          @if (passwordError()) {
+            <div class="tolla-settings__password-message tolla-settings__password-message--error">
+              {{ passwordError() }}
+            </div>
+          }
+
+          @if (passwordSuccess()) {
+            <div class="tolla-settings__password-message tolla-settings__password-message--success">
+              {{ passwordSuccess() }}
+            </div>
+          }
+
+          <div class="tolla-settings__password-actions">
+            <button
+              class="tolla-settings__button"
+              type="submit"
+              [disabled]="passwordForm.invalid || changingPassword()"
+            >
+              {{ changingPassword() ? 'UPDATING...' : 'UPDATE PASSWORD' }}
+            </button>
+          </div>
+        </form>
+
         <div class="tolla-settings__field">
           <span class="tolla-settings__label">Created At</span>
           <span class="tolla-settings__value">{{ user()?.createdAt | date: 'medium' }}</span>
