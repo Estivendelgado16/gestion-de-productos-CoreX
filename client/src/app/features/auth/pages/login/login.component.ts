@@ -25,10 +25,7 @@ export class LoginComponent {
   readonly error = signal<string | null>(null);
 
   readonly form: FormGroup<LoginForm> = new FormGroup<LoginForm>({
-    name: new FormControl<string>('', {
-      nonNullable: true,
-      validators: [Validators.required, Validators.minLength(2)],
-    }),
+    name: new FormControl<string>('', { nonNullable: true }),
     email: new FormControl<string>('', {
       nonNullable: true,
       validators: [Validators.required, Validators.email],
@@ -42,6 +39,19 @@ export class LoginComponent {
   toggleMode(): void {
     this.isRegistering.update((value: boolean) => !value);
     this.error.set(null);
+    this.updateNameValidation();
+  }
+
+  private updateNameValidation(): void {
+    const nameControl = this.form.controls.name;
+
+    if (this.isRegistering()) {
+      nameControl.setValidators([Validators.required, Validators.minLength(2)]);
+    } else {
+      nameControl.clearValidators();
+    }
+
+    nameControl.updateValueAndValidity();
   }
 
   onSubmit(): void {

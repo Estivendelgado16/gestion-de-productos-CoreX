@@ -1,0 +1,41 @@
+<div class="tolla-page">
+  <div class="tolla-page__head">
+    <div>
+      <h1 class="tolla-page__eyebrow">// FAVORITES</h1>
+      <p class="tolla-page__hint">{{ favorites().length }} SAVED PRODUCTS</p>
+    </div>
+  </div>
+
+  <div class="tolla-page__body">
+    @if (loading()) {
+      @for (skeleton of [1, 2, 3]; track skeleton) {
+        <div class="tolla-page__skeleton"></div>
+      }
+    } @else if (error()) {
+      <div class="tolla-page__error" role="alert">{{ error() }}</div>
+    } @else if (favorites().length === 0) {
+      <div class="tolla-page__empty">No favorites yet.</div>
+    } @else {
+      <div class="tolla-page__grid">
+        @for (product of favorites(); track product.id) {
+          <article class="tolla-favorite-card">
+            <div class="tolla-favorite-card__head">
+              <span class="tolla-favorite-card__name">{{ product.name }}</span>
+              <span class="tolla-favorite-card__price">${{ product.price }}</span>
+            </div>
+            <div class="tolla-favorite-card__meta">
+              <span>{{ product.category.name }}</span>
+              <button
+                type="button"
+                class="tolla-favorite-card__remove"
+                (click)="onRemove(product.id)"
+              >
+                REMOVE
+              </button>
+            </div>
+          </article>
+        }
+      </div>
+    }
+  </div>
+</div>

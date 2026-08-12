@@ -1,0 +1,86 @@
+<div class="tolla-page">
+  <div class="tolla-page__head">
+    <div>
+      <h1 class="tolla-page__eyebrow">// PRODUCTS</h1>
+      <p class="tolla-page__hint">
+        {{ totalProducts() }} PRODUCTS · PAGE {{ currentPage() }} OF {{ totalPages() }}
+      </p>
+    </div>
+    <a routerLink="/products/new" class="tolla-page__create">+ CREATE</a>
+  </div>
+
+  <div class="tolla-page__search">
+    <input
+      class="tolla-page__search-input"
+      type="search"
+      placeholder="Search by name or description…"
+      [value]="searchTerm()"
+      (input)="onSearchInput($event)"
+      aria-label="Search products"
+    />
+    @if (searchTerm()) {
+      <button
+        type="button"
+        class="tolla-page__search-clear"
+        (click)="onClearSearch()"
+        aria-label="Clear search"
+      >
+        ×
+      </button>
+    }
+  </div>
+
+  <div class="tolla-page__body">
+    @if (loading()) {
+      @for (skeleton of [1, 2, 3, 4]; track skeleton) {
+        <div class="tolla-page__skeleton"></div>
+      }
+    } @else if (error()) {
+      <div class="tolla-page__error" role="alert">{{ error() }}</div>
+    } @else if (products().length === 0) {
+      <div class="tolla-page__empty">No products found.</div>
+    } @else {
+      <div class="tolla-page__grid">
+        @for (product of products(); track product.id) {
+          <article class="tolla-product-card">
+            <div class="tolla-product-card__head">
+              <span class="tolla-product-card__name">{{ product.name }}</span>
+              <span class="tolla-product-card__price">${{ product.price }}</span>
+            </div>
+            <div class="tolla-product-card__meta">
+              <span>{{ product.category.name }}</span>
+              <span>{{ product.stock }} in stock</span>
+            </div>
+            <div class="tolla-product-card__images">
+              @for (image of product.images; track image.id) {
+                <img [src]="image.url" alt="" class="tolla-product-card__image" />
+              } @empty {
+                <span class="tolla-product-card__no-image">NO IMAGE</span>
+              }
+            </div>
+          </article>
+        }
+      </div>
+
+      <nav class="tolla-page__pagination" aria-label="Pagination">
+        <button
+          type="button"
+          class="tolla-page__page"
+          [disabled]="currentPage() <= 1"
+          (click)="onPageChange(currentPage() - 1)"
+        >
+          ‹
+        </button>
+        <span class="tolla-page__page-label">{{ currentPage() }} / {{ totalPages() }}</span>
+        <button
+          type="button"
+          class="tolla-page__page"
+          [disabled]="currentPage() >= totalPages()"
+          (click)="onPageChange(currentPage() + 1)"
+        >
+          ›
+        </button>
+      </nav>
+    }
+  </div>
+</div>

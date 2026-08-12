@@ -10,12 +10,49 @@ export const routes: Routes = [
       import('./features/auth/pages/login/login.component').then((m) => m.LoginComponent),
   },
   {
-    path: 'dashboard',
+    path: '',
     canActivate: [authGuard],
     loadComponent: () =>
-      import('./features/dashboard/pages/dashboard.component').then(
-        (m) => m.DashboardComponent,
+      import('./features/layout/components/layout-container/layout-container.component').then(
+        (m) => m.LayoutContainerComponent,
       ),
+    children: [
+      {
+        path: 'dashboard',
+        loadComponent: () =>
+          import('./features/dashboard/pages/dashboard/dashboard.component').then(
+            (m) => m.DashboardComponent,
+          ),
+      },
+      {
+        path: 'products',
+        loadComponent: () =>
+          import('./features/products/pages/product-list/product-list.component').then(
+            (m) => m.ProductListComponent,
+          ),
+      },
+      {
+        path: 'products/new',
+        loadComponent: () =>
+          import('./features/products/pages/product-form/product-form.component').then(
+            (m) => m.ProductFormComponent,
+          ),
+      },
+      {
+        path: 'categories',
+        loadComponent: () =>
+          import('./features/categories/pages/category-list/category-list.component').then(
+            (m) => m.CategoryListComponent,
+          ),
+      },
+      {
+        path: 'favorites',
+        loadComponent: () =>
+          import('./features/favorites/pages/favorite-list/favorite-list.component').then(
+            (m) => m.FavoriteListComponent,
+          ),
+      },
+    ],
   },
   { path: '**', redirectTo: 'dashboard' },
 ];

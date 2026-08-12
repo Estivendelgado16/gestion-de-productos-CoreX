@@ -1,4 +1,8 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ILike, Repository } from 'typeorm';
 import { Product } from './entities/product.entity';
@@ -31,9 +35,12 @@ export class ProductsService {
       .take(limit);
 
     if (query.search) {
-      qb.andWhere('(product.name ILIKE :search OR product.description ILIKE :search)', {
-        search: `%${query.search}%`,
-      });
+      qb.andWhere(
+        '(product.name ILIKE :search OR product.description ILIKE :search)',
+        {
+          search: `%${query.search}%`,
+        },
+      );
     }
 
     if (query.categoryId) {
