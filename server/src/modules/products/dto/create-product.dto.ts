@@ -20,18 +20,26 @@ export class CreateProductDto {
   @MinLength(2)
   name: string;
 
-  @ApiPropertyOptional({ example: 'Audífonos bluetooth con cancelación de ruido' })
+  @ApiPropertyOptional({
+    example: 'Audífonos bluetooth con cancelación de ruido',
+  })
   @IsOptional()
   @IsString()
   description?: string;
 
-  @ApiProperty({ example: 129900, description: 'Precio en la moneda local, sin símbolos' })
+  @ApiProperty({
+    example: 129900,
+    description: 'Precio en la moneda local, sin símbolos',
+  })
   @Type(() => Number)
   @IsNumber({ maxDecimalPlaces: 2 })
   @IsPositive()
   price: number;
 
-  @ApiProperty({ example: 25, description: 'Unidades disponibles en inventario' })
+  @ApiProperty({
+    example: 25,
+    description: 'Unidades disponibles en inventario',
+  })
   @Type(() => Number)
   @IsInt()
   @Min(0)
@@ -46,7 +54,8 @@ export class CreateProductDto {
       'https://example.com/imagenes/producto1-front.jpg',
       'https://example.com/imagenes/producto1-back.jpg',
     ],
-    description: 'URLs de las imágenes del producto, en el orden en que se deben mostrar',
+    description:
+      'URLs de las imágenes del producto, en el orden en que se deben mostrar',
     type: [String],
   })
   @IsOptional()
