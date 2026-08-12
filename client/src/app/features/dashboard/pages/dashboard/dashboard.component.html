@@ -1,0 +1,34 @@
+<div class="tolla-dashboard">
+  <section class="tolla-dashboard__section">
+    <div class="tolla-dashboard__section-head">
+      <h1 class="tolla-dashboard__eyebrow">// TOLLA OVERVIEW</h1>
+      <span class="tolla-dashboard__live" aria-hidden="true">
+        <span class="tolla-dashboard__live-dot"></span>
+        LIVE FEED
+      </span>
+    </div>
+    <tolla-kpi-grid [kpis]="kpis()" />
+  </section>
+
+  <section class="tolla-dashboard__section">
+    <div class="tolla-dashboard__section-head">
+      <h2 class="tolla-dashboard__eyebrow">// QUICK ACCESS</h2>
+    </div>
+    <div class="tolla-dashboard__links">
+      <a routerLink="/products" class="tolla-dashboard__link">
+        <span class="tolla-dashboard__link-icon" aria-hidden="true">▣</span>
+        <span>
+          <span class="tolla-dashboard__link-title">Products</span>
+          <span class="tolla-dashboard__link-hint">MANAGE THE CATALOG</span>
+        </span>
+      </a>
+      <a routerLink="/categories" class="tolla-dashboard__link">
+        <span class="tolla-dashboard__link-icon" aria-hidden="true">✦</span>
+        <span>
+          <span class="tolla-dashboard__link-title">Categories</span>
+          <span class="tolla-dashboard__link-hint">MANAGE THE CATEGORIES</span>
+        </span>
+      </a>
+    </div>
+  </section>
+</div>

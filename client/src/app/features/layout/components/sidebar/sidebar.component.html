@@ -1,0 +1,34 @@
+<aside class="tolla-sidebar">
+  <div class="tolla-sidebar__head">
+    <span class="tolla-sidebar__status-dot"></span>
+    <span class="tolla-sidebar__status">SYSTEM ONLINE</span>
+  </div>
+
+  <nav class="tolla-sidebar__nav" aria-label="Main navigation">
+    <span class="tolla-sidebar__label">NAVIGATION</span>
+    @for (item of items; track item.id) {
+      <a
+        routerLink="{{ item.route }}"
+        routerLinkActive="tolla-sidebar__item--active"
+        [attr.aria-label]="item.label"
+        class="tolla-sidebar__item"
+      >
+        <span class="tolla-sidebar__item-icon" [attr.data-icon]="item.icon" aria-hidden="true">
+          @switch (item.icon) {
+            @case ('grid') { ▦ }
+            @case ('box') { ▣ }
+            @case ('network') { ✦ }
+            @case ('star') { ★ }
+          }
+        </span>
+        <span class="tolla-sidebar__item-label">{{ item.label }}</span>
+        <span class="tolla-sidebar__item-indicator" aria-hidden="true"></span>
+      </a>
+    }
+  </nav>
+
+  <div class="tolla-sidebar__foot">
+    <span class="tolla-sidebar__version">TOLLA OS v2.1.0</span>
+    <span class="tolla-sidebar__glitch">#/n/e/t/w/o/r/k</span>
+  </div>
+</aside>
