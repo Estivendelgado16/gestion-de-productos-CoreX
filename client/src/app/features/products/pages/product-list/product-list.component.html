@@ -18,16 +18,43 @@
       (input)="onSearchChange($any($event.target).value)"
     />
 
-    <select
-      class="tolla-page__select"
-      [value]="selectedCategoryId()"
-      (change)="onCategoryChange($any($event.target).value)"
-    >
-      <option value="">All categories</option>
+   <div class="tolla-dropdown">
+
+  <button 
+    type="button" 
+    class="tolla-dropdown__trigger" 
+    (click)="toggleDropdown()"
+  >
+    <span>{{ selectedCategoryName() }}</span>
+    <span class="tolla-dropdown__arrow" [class.tolla-dropdown__arrow--open]="isDropdownOpen()">▼</span>
+  </button>
+
+
+  @if (isDropdownOpen()) {
+    <div class="tolla-dropdown__menu">
+      <button
+        type="button"
+        class="tolla-dropdown__item"
+        [class.tolla-dropdown__item--selected]="selectedCategoryId() === ''"
+        (click)="selectCategory('')"
+      >
+        All categories
+      </button>
+
       @for (cat of categories(); track cat.id) {
-        <option [value]="cat.id">{{ cat.name }}</option>
+        <button
+          type="button"
+          class="tolla-dropdown__item"
+          [class.tolla-dropdown__item--selected]="selectedCategoryId() === cat.id"
+          (click)="selectCategory(cat.id)"
+        >
+          {{ cat.name }}
+        </button>
       }
-    </select>
+    </div>
+  }
+</div>
+
   </div>
 
   <div class="tolla-page__body">
