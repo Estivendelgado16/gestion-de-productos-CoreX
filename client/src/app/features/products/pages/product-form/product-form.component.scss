@@ -89,6 +89,32 @@
     }
   }
 
+  &__select {
+    cursor: pointer;
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.65;
+    }
+
+    option {
+      color: var(--tolla-text-primary);
+      background: var(--tolla-bg-input);
+    }
+  }
+
+  &__price-preview {
+    align-self: flex-start;
+    color: var(--tolla-cyan);
+    font-family: var(--tolla-font-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    padding: 4px 8px;
+    border: 1px solid var(--tolla-border-faint);
+    border-radius: var(--tolla-radius-sm);
+    background: var(--tolla-bg-input);
+  }
+
   &__row {
     display: grid;
     grid-template-columns: 1fr 1fr;
