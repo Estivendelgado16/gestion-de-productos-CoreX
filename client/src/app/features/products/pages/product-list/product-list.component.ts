@@ -34,6 +34,20 @@ export class ProductListComponent implements OnInit {
   readonly success = signal<string | null>(null);
   readonly deletingProductId = signal<string | null>(null);
   readonly productPendingDelete = signal<Product | null>(null);
+  isDropdownOpen = signal<boolean>(false);
+
+  toggleDropdown() {
+  this.isDropdownOpen.update(open => !open);
+}
+selectCategory(catId: string) {
+  this.onCategoryChange(catId);
+  this.isDropdownOpen.set(false);
+}
+selectedCategoryName(): string {
+  if (!this.selectedCategoryId()) return 'All categories';
+  const found = this.categories().find(c => c.id === this.selectedCategoryId());
+  return found ? found.name : 'All categories';
+}
 
   ngOnInit(): void {
     this.loadCategories();
