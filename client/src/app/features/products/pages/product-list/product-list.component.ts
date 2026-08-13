@@ -2,6 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { getApiErrorMessage } from '../../../../core/utils/api-error-message';
+import { formatPrice } from '../../../../core/utils/format-price';
 import { Product, ProductListResponse } from '../../../../models/product.model';
 import { ProductService } from '../../../../services/product.service';
 
@@ -24,6 +25,9 @@ export class ProductListComponent implements OnInit {
   readonly searchTerm = signal<string>('');
   readonly loading = signal<boolean>(true);
   readonly error = signal<string | null>(null);
+  readonly success = signal<string | null>(null);
+  readonly deletingProductId = signal<string | null>(null);
+  readonly productPendingDelete = signal<Product | null>(null);
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(() => this.loadProducts());
@@ -50,6 +54,63 @@ export class ProductListComponent implements OnInit {
     }
     this.currentPage.set(page);
     this.loadProducts();
+  }
+
+  onProductEdit(product: Product): void {
+    void this.router.navigate(['/products', product.id, 'edit']);
+  }
+
+  requestProductDelete(product: Product): void {
+    if (this.deletingProductId()) {
+      return;
+    }
+
+    this.productPendingDelete.set(product);
+    this.error.set(null);
+  }
+
+  cancelProductDelete(): void {
+    if (this.deletingProductId()) {
+      return;
+    }
+
+    this.productPendingDelete.set(null);
+  }
+
+  confirmProductDelete(): void {
+    const product = this.productPendingDelete();
+
+    if (!product || this.deletingProductId()) {
+      return;
+    }
+
+    this.deletingProductId.set(product.id);
+    this.error.set(null);
+    this.success.set(null);
+
+    this.productService.deleteProduct(product.id).subscribe({
+      next: () => {
+        this.products.update((products: Product[]) =>
+          products.filter((item: Product) => item.id !== product.id),
+        );
+        this.totalProducts.update((total: number) => {
+          const nextTotal = Math.max(total - 1, 0);
+          this.totalPages.set(Math.max(Math.ceil(nextTotal / this.limit()), 1));
+          return nextTotal;
+        });
+        this.success.set('Producto eliminado correctamente.');
+        this.deletingProductId.set(null);
+        this.productPendingDelete.set(null);
+      },
+      error: (error: unknown) => {
+        this.error.set(getApiErrorMessage(error, 'No se pudo eliminar el producto.'));
+        this.deletingProductId.set(null);
+      },
+    });
+  }
+
+  formatPrice(price: number): string {
+    return formatPrice(price);
   }
 
   private loadProducts(): void {

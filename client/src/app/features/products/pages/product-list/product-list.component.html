@@ -9,6 +9,10 @@
     <a routerLink="/products/new" class="tolla-page__create">+ CREATE</a>
   </div>
 
+  @if (success()) {
+    <div class="tolla-page__success" role="status">{{ success() }}</div>
+  }
+
   <div class="tolla-page__search">
     <input
       class="tolla-page__search-input"
@@ -42,10 +46,35 @@
     } @else {
       <div class="tolla-page__grid">
         @for (product of products(); track product.id) {
-          <article class="tolla-product-card">
+          <article
+            class="tolla-product-card"
+            role="button"
+            tabindex="0"
+            (click)="onProductEdit(product)"
+            (keydown.enter)="onProductEdit(product)"
+            (keydown.space)="onProductEdit(product); $event.preventDefault()"
+          >
+            <button
+              type="button"
+              class="tolla-product-card__delete"
+              [disabled]="deletingProductId() === product.id"
+              (click)="requestProductDelete(product); $event.stopPropagation()"
+              aria-label="Eliminar producto"
+              title="Eliminar producto"
+            >
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                class="tolla-product-card__delete-icon"
+              >
+                <path d="M9 3h6l1 2h4v2H4V5h4l1-2Z" />
+                <path d="M6 9h12l-1 12H7L6 9Z" />
+                <path d="M10 11v8M14 11v8" />
+              </svg>
+            </button>
             <div class="tolla-product-card__head">
               <span class="tolla-product-card__name">{{ product.name }}</span>
-              <span class="tolla-product-card__price">${{ product.price }}</span>
+              <span class="tolla-product-card__price">{{ formatPrice(product.price) }}</span>
             </div>
             <div class="tolla-product-card__meta">
               <span>{{ product.category.name }}</span>
@@ -83,4 +112,51 @@
       </nav>
     }
   </div>
+
+  @if (productPendingDelete(); as product) {
+    <div class="tolla-confirm" role="presentation" (click)="cancelProductDelete()">
+      <section
+        class="tolla-confirm__dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="delete-product-title"
+        (click)="$event.stopPropagation()"
+      >
+        <div class="tolla-confirm__head">
+          <h2 id="delete-product-title" class="tolla-confirm__title">Eliminar producto</h2>
+          <button
+            type="button"
+            class="tolla-confirm__close"
+            [disabled]="deletingProductId() === product.id"
+            (click)="cancelProductDelete()"
+            aria-label="Cerrar"
+          >
+            X
+          </button>
+        </div>
+        <p class="tolla-confirm__message">
+          Quieres eliminar "{{ product.name }}"? Esta accion tambien lo eliminara del catalogo
+          de productos.
+        </p>
+        <div class="tolla-confirm__actions">
+          <button
+            type="button"
+            class="tolla-confirm__button"
+            [disabled]="deletingProductId() === product.id"
+            (click)="cancelProductDelete()"
+          >
+            Cancelar
+          </button>
+          <button
+            type="button"
+            class="tolla-confirm__button tolla-confirm__button--danger"
+            [disabled]="deletingProductId() === product.id"
+            (click)="confirmProductDelete()"
+          >
+            {{ deletingProductId() === product.id ? 'Eliminando...' : 'Si, eliminar' }}
+          </button>
+        </div>
+      </section>
+    </div>
+  }
 </div>
