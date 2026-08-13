@@ -11,13 +11,139 @@
     <div class="tolla-page__success" role="status">{{ success() }}</div>
   }
 
-  <tolla-category-grid
-    [categories]="categories()"
-    [loading]="loading()"
-    [error]="loadError()"
-    (categorySelected)="onCategoryEdit($event)"
-    (categoryEdit)="onCategoryEdit($event)"
-    (categoryDelete)="onCategoryDelete($event)"
-    (createNode)="onCreate()"
-  />
+  @if (!selectedCategory()) {
+    <tolla-category-grid
+      [categories]="categories()"
+      [loading]="loading()"
+      [error]="loadError()"
+      (categorySelected)="onCategorySelect($event)"
+      (categoryEdit)="onCategoryEdit($event)"
+      (categoryDelete)="onCategoryDelete($event)"
+      (createNode)="onCreate()"
+    />
+  } @else {
+    <section class="tolla-category-products" aria-labelledby="category-products-title">
+      <div class="tolla-category-products__head">
+        <div>
+          <button
+            type="button"
+            class="tolla-category-products__back"
+            (click)="onBackToCategories()"
+          >
+            ← BACK TO CATEGORIES
+          </button>
+          <h2 id="category-products-title" class="tolla-category-products__title">
+            {{ selectedCategory()?.name }}
+          </h2>
+          <p class="tolla-category-products__hint">
+            {{ totalCategoryProducts() }} PRODUCTS LINKED TO THIS CATEGORY
+          </p>
+        </div>
+        @if (selectedCategory()) {
+          <button
+            type="button"
+            class="tolla-category-products__edit"
+            (click)="onCategoryEdit(selectedCategory()!)"
+          >
+            EDIT
+          </button>
+        }
+      </div>
+
+      @if (loadingProducts()) {
+        <div class="tolla-category-products__state">Loading products...</div>
+      } @else if (productsError()) {
+        <div class="tolla-category-products__state tolla-category-products__state--error" role="alert">
+          {{ productsError() }}
+        </div>
+      } @else if (categoryProducts().length === 0) {
+        <div class="tolla-category-products__state">
+          No products have been created for this category yet.
+        </div>
+      } @else {
+        <div class="tolla-category-products__grid">
+          @for (product of categoryProducts(); track product.id) {
+            <article class="tolla-category-product">
+              <button
+                type="button"
+                class="tolla-category-product__delete"
+                [disabled]="deletingProductId() === product.id"
+                (click)="requestProductDelete(product)"
+                aria-label="Eliminar producto"
+                title="Eliminar producto"
+              >
+                <svg
+                  aria-hidden="true"
+                  viewBox="0 0 24 24"
+                  class="tolla-category-product__delete-icon"
+                >
+                  <path d="M9 3h6l1 2h4v2H4V5h4l1-2Z" />
+                  <path d="M6 9h12l-1 12H7L6 9Z" />
+                  <path d="M10 11v8M14 11v8" />
+                </svg>
+              </button>
+              <div class="tolla-category-product__head">
+                <span class="tolla-category-product__name">{{ product.name }}</span>
+                <span class="tolla-category-product__price">{{ formatPrice(product.price) }}</span>
+              </div>
+              <p class="tolla-category-product__description">
+                {{ product.description || 'No description available.' }}
+              </p>
+              <div class="tolla-category-product__meta">
+                <span>{{ product.stock }} in stock</span>
+                <span>{{ product.images.length }} images</span>
+              </div>
+            </article>
+          }
+        </div>
+      }
+    </section>
+  }
+
+  @if (productPendingDelete(); as product) {
+    <div class="tolla-confirm" role="presentation" (click)="cancelProductDelete()">
+      <section
+        class="tolla-confirm__dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="delete-product-title"
+        (click)="$event.stopPropagation()"
+      >
+        <div class="tolla-confirm__head">
+          <h2 id="delete-product-title" class="tolla-confirm__title">Eliminar producto</h2>
+          <button
+            type="button"
+            class="tolla-confirm__close"
+            [disabled]="deletingProductId() === product.id"
+            (click)="cancelProductDelete()"
+            aria-label="Cerrar"
+          >
+            X
+          </button>
+        </div>
+        <p class="tolla-confirm__message">
+          Quieres eliminar "{{ product.name }}"? Esta accion tambien lo eliminara del catalogo
+          de productos.
+        </p>
+        <div class="tolla-confirm__actions">
+          <button
+            type="button"
+            class="tolla-confirm__button"
+            [disabled]="deletingProductId() === product.id"
+            (click)="cancelProductDelete()"
+          >
+            Cancelar
+          </button>
+          <button
+            type="button"
+            class="tolla-confirm__button tolla-confirm__button--danger"
+            [disabled]="deletingProductId() === product.id"
+            (click)="confirmProductDelete()"
+          >
+            {{ deletingProductId() === product.id ? 'Eliminando...' : 'Si, eliminar' }}
+          </button>
+        </div>
+      </section>
+    </div>
+  }
 </div>
