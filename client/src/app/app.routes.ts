@@ -39,6 +39,13 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'products/:id/edit',
+        loadComponent: () =>
+          import('./features/products/pages/product-form/product-form.component').then(
+            (m) => m.ProductFormComponent,
+          ),
+      },
+      {
         path: 'categories',
         loadComponent: () =>
           import('./features/categories/pages/category-list/category-list.component').then(

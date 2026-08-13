@@ -5,6 +5,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { getApiErrorMessage } from '../../../../core/utils/api-error-message';
+import { formatPrice } from '../../../../core/utils/format-price';
 import { Product, ProductListResponse } from '../../../../models/product.model';
 import { ProductService } from '../../../../services/product.service';
 
@@ -30,6 +31,9 @@ export class ProductListComponent implements OnInit {
   readonly selectedCategoryId = signal<string>('');
   readonly categories = signal<Category[]>([]);
   readonly error = signal<string | null>(null);
+  readonly success = signal<string | null>(null);
+  readonly deletingProductId = signal<string | null>(null);
+  readonly productPendingDelete = signal<Product | null>(null);
 
   ngOnInit(): void {
     this.loadCategories();
