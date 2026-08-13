@@ -15,6 +15,7 @@ import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Auth } from '../auth/decorators/auth.decorator';
+import { UserRole } from '../users/enums/user-role.enum';
 
 @ApiTags('Categorías')
 @Controller('categories')
@@ -34,14 +35,14 @@ export class CategoriesController {
   }
 
   @Post()
-  @Auth()
+  @Auth(UserRole.ADMIN)
   @ApiOperation({ summary: 'Crear una categoría (requiere JWT)' })
   create(@Body() dto: CreateCategoryDto) {
     return this.categoriesService.create(dto);
   }
 
   @Patch(':id')
-  @Auth()
+  @Auth(UserRole.ADMIN)
   @ApiOperation({ summary: 'Actualizar una categoría (requiere JWT)' })
   update(
     @Param('id', ParseUUIDPipe) id: string,
@@ -51,7 +52,7 @@ export class CategoriesController {
   }
 
   @Delete(':id')
-  @Auth()
+  @Auth(UserRole.ADMIN)
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Eliminar una categoría (requiere JWT)' })
   remove(@Param('id', ParseUUIDPipe) id: string) {

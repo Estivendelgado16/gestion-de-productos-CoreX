@@ -13,9 +13,10 @@ import { FavoritesService } from './favorites.service';
 import { Auth } from '../auth/decorators/auth.decorator';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import type { JwtPayload } from '../auth/interfaces/jwt-payload.interface';
+import { UserRole } from '../users/enums/user-role.enum';
 
 @ApiTags('Favoritos')
-@Auth()
+@Auth(UserRole.USER)
 @Controller('favorites')
 export class FavoritesController {
   constructor(private readonly favoritesService: FavoritesService) {}

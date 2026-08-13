@@ -50,8 +50,14 @@
       </span>
       <span class="tolla-header__username">{{ userName }}</span>
     </div>
-    <button type="button" class="tolla-header__logout" (click)="onLogout()">
-      Logout
-    </button>
+    @if (isAuthenticated) {
+      <button type="button" class="tolla-header__logout" (click)="onLogout()">
+        Logout
+      </button>
+    } @else {
+      <button type="button" class="tolla-header__logout" (click)="onLogin()">
+        Login
+      </button>
+    }
   </div>
 </header>
