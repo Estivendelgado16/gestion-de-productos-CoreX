@@ -1,4 +1,38 @@
 .tolla-page {
+
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 1440px;
+  margin: 0 auto;
+ 
+    &__filters {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+
+  &__search,
+  &__select {
+    font-family: var(--tolla-font-mono);
+    font-size: 12px;
+    color: var(--tolla-text-primary);
+    background: var(--tolla-bg-card);
+    border: 1px solid var(--tolla-border);
+    border-radius: var(--tolla-radius-md);
+    padding: 8px 12px;
+    outline: none;
+    transition: border-color var(--tolla-transition);
+
+    &:focus {
+      border-color: var(--tolla-cyan);
+    }
+  }
+
+  &__search {
+    flex: 1;
+  }
+
   display: flex;
   flex-direction: column;
   gap: 24px;

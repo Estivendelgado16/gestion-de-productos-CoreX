@@ -9,25 +9,25 @@
     <a routerLink="/products/new" class="tolla-page__create">+ CREATE</a>
   </div>
 
-  <div class="tolla-page__search">
+  <div class="tolla-page__filters">
     <input
-      class="tolla-page__search-input"
       type="search"
-      placeholder="Search by name or description…"
+      class="tolla-page__search"
+      placeholder="Search products..."
       [value]="searchTerm()"
-      (input)="onSearchInput($event)"
-      aria-label="Search products"
+      (input)="onSearchChange($any($event.target).value)"
     />
-    @if (searchTerm()) {
-      <button
-        type="button"
-        class="tolla-page__search-clear"
-        (click)="onClearSearch()"
-        aria-label="Clear search"
-      >
-        ×
-      </button>
-    }
+
+    <select
+      class="tolla-page__select"
+      [value]="selectedCategoryId()"
+      (change)="onCategoryChange($any($event.target).value)"
+    >
+      <option value="">All categories</option>
+      @for (cat of categories(); track cat.id) {
+        <option [value]="cat.id">{{ cat.name }}</option>
+      }
+    </select>
   </div>
 
   <div class="tolla-page__body">
