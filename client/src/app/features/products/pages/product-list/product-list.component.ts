@@ -1,3 +1,6 @@
+import { Category } from '../../../../models/category.model';
+import { CategoryService } from '../../../../services/category.service';
+
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -14,6 +17,7 @@ import { ProductService } from '../../../../services/product.service';
 })
 export class ProductListComponent implements OnInit {
   private readonly productService: ProductService = inject(ProductService);
+  private readonly categoryService: CategoryService = inject(CategoryService);
   private readonly route: ActivatedRoute = inject(ActivatedRoute);
   private readonly router: Router = inject(Router);
 
@@ -24,28 +28,16 @@ export class ProductListComponent implements OnInit {
   readonly limit = signal<number>(10);
   readonly searchTerm = signal<string>('');
   readonly loading = signal<boolean>(true);
+  readonly selectedCategoryId = signal<string>('');
+  readonly categories = signal<Category[]>([]);
   readonly error = signal<string | null>(null);
   readonly success = signal<string | null>(null);
   readonly deletingProductId = signal<string | null>(null);
   readonly productPendingDelete = signal<Product | null>(null);
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe(() => this.loadProducts());
-  }
-
-  onSearch(term: string): void {
-    void this.router.navigate(['/products'], {
-      queryParams: { search: term || null, page: 1 },
-      queryParamsHandling: 'merge',
-    });
-  }
-
-  onSearchInput(event: Event): void {
-    this.onSearch((event.target as HTMLInputElement).value);
-  }
-
-  onClearSearch(): void {
-    this.onSearch('');
+    this.loadCategories();
+    this.loadProducts();
   }
 
   onPageChange(page: number): void {
@@ -56,74 +48,36 @@ export class ProductListComponent implements OnInit {
     this.loadProducts();
   }
 
-  onProductEdit(product: Product): void {
-    void this.router.navigate(['/products', product.id, 'edit']);
+  onCategoryChange(categoryId: string): void {
+    this.selectedCategoryId.set(categoryId);
+    this.currentPage.set(1);
+    this.loadProducts();
   }
 
-  requestProductDelete(product: Product): void {
-    if (this.deletingProductId()) {
-      return;
-    }
-
-    this.productPendingDelete.set(product);
-    this.error.set(null);
+  onSearchChange(term: string): void {
+    this.searchTerm.set(term);
+    this.currentPage.set(1);
+    this.loadProducts();
   }
 
-  cancelProductDelete(): void {
-    if (this.deletingProductId()) {
-      return;
-    }
-
-    this.productPendingDelete.set(null);
-  }
-
-  confirmProductDelete(): void {
-    const product = this.productPendingDelete();
-
-    if (!product || this.deletingProductId()) {
-      return;
-    }
-
-    this.deletingProductId.set(product.id);
-    this.error.set(null);
-    this.success.set(null);
-
-    this.productService.deleteProduct(product.id).subscribe({
-      next: () => {
-        this.products.update((products: Product[]) =>
-          products.filter((item: Product) => item.id !== product.id),
-        );
-        this.totalProducts.update((total: number) => {
-          const nextTotal = Math.max(total - 1, 0);
-          this.totalPages.set(Math.max(Math.ceil(nextTotal / this.limit()), 1));
-          return nextTotal;
-        });
-        this.success.set('Producto eliminado correctamente.');
-        this.deletingProductId.set(null);
-        this.productPendingDelete.set(null);
-      },
-      error: (error: unknown) => {
-        this.error.set(getApiErrorMessage(error, 'No se pudo eliminar el producto.'));
-        this.deletingProductId.set(null);
-      },
+  private loadCategories(): void {
+    this.categoryService.getCategories().subscribe({
+      next: (cats: Category[]) => this.categories.set(cats),
+      error: () => this.categories.set([]),
     });
   }
 
-  formatPrice(price: number): string {
-    return formatPrice(price);
-  }
-
   private loadProducts(): void {
-    const search = (this.route.snapshot.queryParamMap.get('search') ?? '').trim();
-    const pageParam = Number(this.route.snapshot.queryParamMap.get('page')) || 1;
-
-    this.searchTerm.set(search);
-    this.currentPage.set(pageParam);
     this.loading.set(true);
     this.error.set(null);
 
     this.productService
-      .getProducts({ search: search || undefined, page: pageParam, limit: this.limit() })
+      .getProducts({
+        page: this.currentPage(),
+        limit: this.limit(),
+        search: this.searchTerm() || undefined,
+        categoryId: this.selectedCategoryId() || undefined,
+      })
       .subscribe({
         next: (response: ProductListResponse) => {
           this.products.set(response.data);
