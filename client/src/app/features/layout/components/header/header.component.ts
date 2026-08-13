@@ -16,6 +16,7 @@ export class HeaderComponent {
   private readonly router: Router = inject(Router);
 
   @Input() userName: string = '';
+  @Input() isAuthenticated: boolean = false;
   @Input() resultCount: number | null = null;
   @Output() searchChanged = new EventEmitter<string>();
 
@@ -34,6 +35,11 @@ export class HeaderComponent {
   }
 
   onLogout(): void {
+    if (!this.isAuthenticated) {
+      void this.router.navigate(['/login']);
+      return;
+    }
+
     this.authService.logout().subscribe({
       next: () => {
         this.authService.clearSession();
@@ -44,5 +50,9 @@ export class HeaderComponent {
         void this.router.navigate(['/login']);
       },
     });
+  }
+
+  onLogin(): void {
+    void this.router.navigate(['/login']);
   }
 }

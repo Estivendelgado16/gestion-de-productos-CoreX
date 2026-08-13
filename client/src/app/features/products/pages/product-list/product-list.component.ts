@@ -5,6 +5,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { getApiErrorMessage } from '../../../../core/utils/api-error-message';
+import { AuthService } from '../../../../core/services/auth.service';
 import { formatPrice } from '../../../../core/utils/format-price';
 import { Product, ProductListResponse } from '../../../../models/product.model';
 import { ProductService } from '../../../../services/product.service';
@@ -18,6 +19,7 @@ import { ProductService } from '../../../../services/product.service';
 export class ProductListComponent implements OnInit {
   private readonly productService: ProductService = inject(ProductService);
   private readonly categoryService: CategoryService = inject(CategoryService);
+  private readonly authService: AuthService = inject(AuthService);
   private readonly route: ActivatedRoute = inject(ActivatedRoute);
   private readonly router: Router = inject(Router);
 
@@ -54,6 +56,10 @@ selectedCategoryName(): string {
     this.loadProducts();
   }
 
+  isAuthenticated(): boolean {
+    return this.authService.isAuthenticated();
+  }
+
   onPageChange(page: number): void {
     if (page < 1 || page > this.totalPages()) {
       return;
@@ -75,10 +81,18 @@ selectedCategoryName(): string {
   }
 
   onProductEdit(product: Product): void {
+    if (!this.isAuthenticated()) {
+      return;
+    }
+
     void this.router.navigate(['/products', product.id, 'edit']);
   }
 
   requestProductDelete(product: Product): void {
+    if (!this.requireAuthentication()) {
+      return;
+    }
+
     if (this.deletingProductId()) {
       return;
     }
@@ -129,6 +143,15 @@ selectedCategoryName(): string {
 
   formatPrice(price: number): string {
     return formatPrice(price);
+  }
+
+  private requireAuthentication(): boolean {
+    if (this.authService.isAuthenticated()) {
+      return true;
+    }
+
+    void this.router.navigate(['/login']);
+    return false;
   }
 
   private loadCategories(): void {

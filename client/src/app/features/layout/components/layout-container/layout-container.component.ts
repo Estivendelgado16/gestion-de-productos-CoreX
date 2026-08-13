@@ -17,6 +17,7 @@ export class LayoutContainerComponent implements OnInit {
   private readonly router: Router = inject(Router);
 
   readonly userName = signal<string>('Operator');
+  readonly isAuthenticated = signal<boolean>(false);
   readonly resultCount = signal<number | null>(null);
 
   ngOnInit(): void {
@@ -31,6 +32,13 @@ export class LayoutContainerComponent implements OnInit {
   }
 
   private bootstrapUser(): void {
+    this.isAuthenticated.set(this.authService.isAuthenticated());
+
+    if (!this.isAuthenticated()) {
+      this.userName.set('Visitor');
+      return;
+    }
+
     const stored: User | null = this.authService.getStoredUser();
 
     if (stored?.name) {
