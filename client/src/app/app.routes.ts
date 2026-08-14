@@ -3,11 +3,13 @@ import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'products', pathMatch: 'full' },
+  { path: '', redirectTo: 'publicCatalog', pathMatch: 'full' },
   {
-    path: 'login',
+    path: 'publicCatalog',
     loadComponent: () =>
-      import('./features/auth/pages/login/login.component').then((m) => m.LoginComponent),
+      import('./features/public-catalog/public-catalog.component').then(
+        (m) => m.PublicCatalogComponent,
+      ),
   },
   {
     path: '',
@@ -17,11 +19,19 @@ export const routes: Routes = [
       ),
     children: [
       {
-        path: 'dashboard',
+        path: 'userProducts',
         canActivate: [authGuard],
         loadComponent: () =>
-          import('./features/dashboard/pages/dashboard/dashboard.component').then(
-            (m) => m.DashboardComponent,
+          import('./features/user-products/user-products.component').then(
+            (m) => m.UserProductsComponent,
+          ),
+      },
+      {
+        path: 'userFavoritos',
+        canActivate: [authGuard],
+        loadComponent: () =>
+          import('./features/favorites/pages/favorite-list/favorite-list.component').then(
+            (m) => m.FavoriteListComponent,
           ),
       },
       {
@@ -29,6 +39,14 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/products/pages/product-list/product-list.component').then(
             (m) => m.ProductListComponent,
+          ),
+      },
+      {
+        path: 'dashboard',
+        canActivate: [authGuard],
+        loadComponent: () =>
+          import('./features/dashboard/pages/dashboard/dashboard.component').then(
+            (m) => m.DashboardComponent,
           ),
       },
       {
@@ -89,5 +107,5 @@ export const routes: Routes = [
       },
     ],
   },
-  { path: '**', redirectTo: 'products' },
+  { path: '**', redirectTo: 'publicCatalog' },
 ];

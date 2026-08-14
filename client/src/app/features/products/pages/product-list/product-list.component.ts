@@ -1,12 +1,15 @@
 import { Category } from '../../../../models/category.model';
 import { CategoryService } from '../../../../services/category.service';
 
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, effect, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { Observable } from 'rxjs';
 
 import { getApiErrorMessage } from '../../../../core/utils/api-error-message';
 import { AuthService } from '../../../../core/services/auth.service';
+import { LoginModalService } from '../../../../core/services/login-modal.service';
 import { formatPrice } from '../../../../core/utils/format-price';
+import { FavoriteService } from '../../../../services/favorite.service';
 import { Product, ProductListResponse } from '../../../../models/product.model';
 import { ProductService } from '../../../../services/product.service';
 
@@ -19,7 +22,9 @@ import { ProductService } from '../../../../services/product.service';
 export class ProductListComponent implements OnInit {
   private readonly productService: ProductService = inject(ProductService);
   private readonly categoryService: CategoryService = inject(CategoryService);
+  private readonly favoriteService: FavoriteService = inject(FavoriteService);
   private readonly authService: AuthService = inject(AuthService);
+  private readonly loginModalService: LoginModalService = inject(LoginModalService);
   private readonly route: ActivatedRoute = inject(ActivatedRoute);
   private readonly router: Router = inject(Router);
 
@@ -36,7 +41,16 @@ export class ProductListComponent implements OnInit {
   readonly success = signal<string | null>(null);
   readonly deletingProductId = signal<string | null>(null);
   readonly productPendingDelete = signal<Product | null>(null);
+  readonly favoriteIds = signal<Set<string>>(new Set<string>());
   isDropdownOpen = signal<boolean>(false);
+
+  constructor() {
+    effect(() => {
+      if (!this.loginModalService.isOpen() && this.authService.isAuthenticated()) {
+        this.loadFavorites();
+      }
+    });
+  }
 
   toggleDropdown() {
   this.isDropdownOpen.update(open => !open);
@@ -60,6 +74,10 @@ selectedCategoryName(): string {
     return this.authService.isAuthenticated();
   }
 
+  isAdmin(): boolean {
+    return this.authService.isAdmin();
+  }
+
   onPageChange(page: number): void {
     if (page < 1 || page > this.totalPages()) {
       return;
@@ -81,11 +99,50 @@ selectedCategoryName(): string {
   }
 
   onProductEdit(product: Product): void {
-    if (!this.isAuthenticated()) {
+    if (!this.requireAuthentication()) {
       return;
     }
 
     void this.router.navigate(['/products', product.id, 'edit']);
+  }
+
+  isFavorite(productId: string): boolean {
+    return this.favoriteIds().has(productId);
+  }
+
+  toggleFavorite(product: Product): void {
+    if (!this.requireAuthentication()) {
+      return;
+    }
+
+    const isFavorite = this.isFavorite(product.id);
+    const request$: Observable<Product | void> = isFavorite
+      ? this.favoriteService.removeFavorite(product.id)
+      : this.favoriteService.addFavorite(product.id);
+
+    request$.subscribe({
+      next: () => {
+        this.favoriteIds.update((ids: Set<string>) => {
+          const next = new Set<string>(ids);
+          if (isFavorite) {
+            next.delete(product.id);
+          } else {
+            next.add(product.id);
+          }
+          return next;
+        });
+      },
+      error: (error: unknown) => {
+        this.error.set(
+          getApiErrorMessage(
+            error,
+            isFavorite
+              ? 'No se pudo quitar el producto de favoritos.'
+              : 'No se pudo agregar el producto a favoritos.',
+          ),
+        );
+      },
+    });
   }
 
   requestProductDelete(product: Product): void {
@@ -150,8 +207,16 @@ selectedCategoryName(): string {
       return true;
     }
 
-    void this.router.navigate(['/login']);
+    this.loginModalService.open();
     return false;
+  }
+
+  private loadFavorites(): void {
+    this.favoriteService.getFavorites().subscribe({
+      next: (products: Product[]) =>
+        this.favoriteIds.set(new Set<string>(products.map((product) => product.id))),
+      error: () => this.favoriteIds.set(new Set<string>()),
+    });
   }
 
   private loadCategories(): void {

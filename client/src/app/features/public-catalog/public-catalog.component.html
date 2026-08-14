@@ -1,0 +1,69 @@
+<div class="tolla-catalog">
+  <header class="tolla-catalog__head">
+    <div class="tolla-catalog__heading">
+      <h1 class="tolla-catalog__title">PUBLIC CATALOG</h1>
+      <p class="tolla-catalog__hint">{{ totalProducts() }} PRODUCTS</p>
+    </div>
+    @if (!isAuthenticated()) {
+      <button type="button" class="tolla-catalog__action" (click)="openLoginModal()">LOGIN</button>
+    }
+  </header>
+
+  <div class="tolla-catalog__body">
+    @if (loading()) {
+      @for (skeleton of [1, 2, 3, 4, 5, 6]; track skeleton) {
+        <div class="tolla-catalog__skeleton"></div>
+      }
+    } @else if (error()) {
+      <div class="tolla-catalog__error" role="alert">{{ error() }}</div>
+    } @else if (products().length === 0) {
+      <div class="tolla-catalog__empty">No products yet.</div>
+    } @else {
+      <div class="tolla-catalog__grid">
+        @for (product of products(); track product.id) {
+          <article class="tolla-catalog-card">
+            @if (!isAdmin()) {
+              <div class="tolla-catalog-card__actions">
+                <button
+                  type="button"
+                  class="tolla-catalog-card__like"
+                  [class.tolla-catalog-card__like--active]="isFavorite(product.id)"
+                  (click)="toggleFavorite(product)"
+                  [attr.aria-label]="isFavorite(product.id) ? 'Quitar de favoritos' : 'Agregar a favoritos'"
+                  [attr.title]="isFavorite(product.id) ? 'Quitar de favoritos' : 'Agregar a favoritos'"
+                >
+                  <svg
+                    aria-hidden="true"
+                    viewBox="0 0 24 24"
+                    class="tolla-catalog-card__like-icon"
+                  >
+                    <path
+                      d="M12 21s-7.5-4.6-10-9.2C.4 8.6 2.4 4.5 6.3 4.5c2.2 0 3.7 1.2 4.5 2.6h2.4c.8-1.4 2.3-2.6 4.5-2.6 3.9 0 5.9 4.1 4.3 7.3C19.5 16.4 12 21 12 21Z"
+                    />
+                  </svg>
+                </button>
+              </div>
+            }
+            <div class="tolla-catalog-card__images">
+              @for (image of product.images; track image.id) {
+                <img [src]="image.url" alt="" class="tolla-catalog-card__image" />
+              } @empty {
+                <span class="tolla-catalog-card__no-image">NO IMAGE</span>
+              }
+            </div>
+            <div class="tolla-catalog-card__head">
+              <span class="tolla-catalog-card__name">{{ product.name }}</span>
+              <span class="tolla-catalog-card__price">{{ formatPrice(product.price) }}</span>
+            </div>
+            <div class="tolla-catalog-card__meta">
+              <span>{{ product.category.name }}</span>
+              <span>{{ product.stock }} in stock</span>
+            </div>
+          </article>
+        }
+      </div>
+    }
+  </div>
+</div>
+
+<tolla-login-modal />

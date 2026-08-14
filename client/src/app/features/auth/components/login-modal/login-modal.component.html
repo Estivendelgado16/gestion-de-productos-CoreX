@@ -1,0 +1,22 @@
+@if (isOpen()) {
+  <div class="tolla-login-modal" role="presentation" (click)="close()">
+    <section
+      class="tolla-login-modal__dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Iniciar sesión"
+      (click)="$event.stopPropagation()"
+    >
+      <button
+        type="button"
+        class="tolla-login-modal__close"
+        (click)="close()"
+        aria-label="Cerrar"
+        title="Cerrar"
+      >
+        ×
+      </button>
+      <tolla-login />
+    </section>
+  </div>
+}

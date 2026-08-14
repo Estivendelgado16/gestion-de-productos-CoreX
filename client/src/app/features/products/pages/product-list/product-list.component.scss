@@ -333,7 +333,7 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  padding: 16px 48px 16px 16px;
+  padding: 16px 84px 16px 16px;
   border: 1px solid var(--tolla-border-faint);
   border-radius: var(--tolla-radius-lg);
   background: var(--tolla-bg-card);
@@ -385,12 +385,12 @@
   &__images {
     display: flex;
     gap: 8px;
-    min-height: 48px;
+    min-height: 160px;
   }
 
   &__image {
-    width: 48px;
-    height: 48px;
+    width: 280px;
+    height: 160px;
     object-fit: cover;
     border-radius: var(--tolla-radius-sm);
     border: 1px solid var(--tolla-border-faint);
@@ -408,10 +408,18 @@
     padding: 6px 10px;
   }
 
-  &__delete {
+  &__actions {
     position: absolute;
     top: 10px;
     right: 10px;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  &__delete,
+  &__like {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -445,7 +453,15 @@
     }
   }
 
-  &__delete-icon {
+  &__like--active {
+    color: var(--tolla-magenta);
+    border-color: var(--tolla-magenta);
+    background: rgba(244, 114, 182, 0.12);
+    box-shadow: 0 0 12px var(--tolla-glow-magenta);
+  }
+
+  &__delete-icon,
+  &__like-icon {
     width: 16px;
     height: 16px;
     fill: none;
@@ -453,6 +469,10 @@
     stroke-width: 1.8;
     stroke-linecap: round;
     stroke-linejoin: round;
+  }
+
+  &__like--active &__like-icon {
+    fill: currentColor;
   }
 }
 

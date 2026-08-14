@@ -5,10 +5,11 @@ import { User } from '../../../../models/user.model';
 import { AuthService } from '../../../../core/services/auth.service';
 import { HeaderComponent } from '../header/header.component';
 import { SidebarComponent } from '../sidebar/sidebar.component';
+import { LoginModalComponent } from '../../../auth/components/login-modal/login-modal.component';
 
 @Component({
   selector: 'tolla-layout-container',
-  imports: [RouterOutlet, HeaderComponent, SidebarComponent],
+  imports: [RouterOutlet, HeaderComponent, SidebarComponent, LoginModalComponent],
   templateUrl: './layout-container.component.html',
   styleUrl: './layout-container.component.scss',
 })
@@ -25,7 +26,7 @@ export class LayoutContainerComponent implements OnInit {
   }
 
   onSearch(term: string): void {
-    void this.router.navigate(['/products'], {
+    void this.router.navigate(['/userProducts'], {
       queryParams: term ? { search: term } : {},
       queryParamsHandling: 'merge',
     });

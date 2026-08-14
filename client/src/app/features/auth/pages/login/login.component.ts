@@ -3,6 +3,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router } from '@angular/router';
 
 import { AuthService } from '../../../../core/services/auth.service';
+import { LoginModalService } from '../../../../core/services/login-modal.service';
 
 interface LoginForm {
   name: FormControl<string>;
@@ -18,6 +19,7 @@ interface LoginForm {
 })
 export class LoginComponent implements OnInit {
   private readonly authService: AuthService = inject(AuthService);
+  private readonly loginModalService: LoginModalService = inject(LoginModalService);
   private readonly router: Router = inject(Router);
 
   readonly isRegistering = signal<boolean>(false);
@@ -83,7 +85,14 @@ export class LoginComponent implements OnInit {
     request$.subscribe({
       next: () => {
         this.submitting.set(false);
-        void this.router.navigate(['/dashboard']);
+
+        if (this.loginModalService.isOpen()) {
+          this.loginModalService.close();
+        }
+
+        void this.router.navigate([
+          this.authService.isAdmin() ? '/dashboard' : '/userProducts',
+        ]);
       },
       error: (err: unknown) => {
         this.submitting.set(false);
