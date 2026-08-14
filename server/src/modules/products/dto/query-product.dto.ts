@@ -17,6 +17,15 @@ export class QueryProductDto {
   @IsUUID()
   categoryId?: string;
 
+  @ApiPropertyOptional({
+    example: 'zapatos',
+    description:
+      'Filtra por el nombre de la categoría. Útil para vistas públicas donde un mismo nombre puede pertenecer a varios administradores.',
+  })
+  @IsOptional()
+  @IsString()
+  categoryName?: string;
+
   @ApiPropertyOptional({ example: 1, default: 1 })
   @IsOptional()
   @Type(() => Number)
