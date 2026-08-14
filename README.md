@@ -26,11 +26,12 @@ flowchart LR
     end
 
     subgraph Data["DATOS"]
-        DB[("PostgreSQL (Supabase)<br/>products · product_images<br/>categories · users · favorites")]
+        DB[("PostgreSQL (Supabase)<br/>products (createdBy) · product_images<br/>categories (createdBy) · users · favorites")]
         PXAPI["Pexels API<br/>https://api.pexels.com/v1/search"]
     end
 
     A1 -- "GET {API}/products?search&categoryId&page&limit" --> P
+    Note["Catálogo público y 'Mis productos' agrupan categorías por nombre.<br/>Si el token es admin, findAll filtra por createdBy (solo ve lo suyo)."]
     A2 -- "POST {API}/products (JWT admin)" --> P
     P -- "llamada al servicio" --> PS
     A3 -- "POST {API}/auth/login → token" --> C
@@ -58,7 +59,11 @@ sequenceDiagram
     participant PE as Pexels API
 
     NG->>API: GET /products?search=&categoryId=&page=1&limit=12
-    Note over NG,API: HTTPS · sin token (público) o con JWT
+    Note over NG,API: Catálogo público pagina con limit=12; "Mis productos" usa limit=1000<br/>HTTPS · sin token (público) o con JWT
+    opt si el token es de un admin
+        API->>SVC: findAll(query, user) → filtra por createdBy = user.sub
+        Note over SVC: El admin solo recibe los productos que él creó
+    end
     API->>SVC: findAll(query)
     SVC->>DB: QueryBuilder con joins (category, images)<br/>ORDER BY createdAt DESC · skip/take
     DB-->>SVC: filas de products + category + product_images
@@ -114,10 +119,10 @@ sequenceDiagram
 ## Funcionalidades destacadas
 
 ### Para el usuario final
-- Catálogo público con búsqueda, categorías y paginación.
+- Catálogo público con búsqueda, categorías (unificadas por nombre) y paginación.
 - Favoritos con un solo clic (corazón) — sin necesidad de cuenta.
 - Login modal integrado que no interrumpe la navegación.
-- Vista personal "Mis productos" con buscador rápido.
+- Vista personal "Mis productos" que carga todo el catálogo de una sola vez (sin paginación por página), con buscador rápido y filtro por categorías.
 
 ### Para el administrador
 - Gestión completa de productos: crear, editar, eliminar.
@@ -128,6 +133,8 @@ sequenceDiagram
 
 ### Sistema
 - Autenticación JWT con roles `admin` y `user`.
+- Aislamiento multi-administrador: cada admin solo gestiona los productos y categorías que creó.
+- Categorías unificadas por nombre: la vista pública y de usuario agrupan las categorías de todos los admins en un solo listado.
 - Roles administradores configurables por email (`ADMIN_EMAILS`).
 - API REST documentada con Swagger.
 - Base de datos PostgreSQL relacional (Supabase).
@@ -172,6 +179,8 @@ sequenceDiagram
 | Configuración de perfil | Sí | Sí |
 
 > El rol se asigna automáticamente al iniciar sesión: si el email está en `ADMIN_EMAILS`, el usuario es administrador.
+
+> **Aislamiento por administrador:** los productos y categorías se guardan con referencia a su creador (`createdBy`). Un admin solo ve y gestiona lo que él mismo creó; las categorías del público se agrupan por nombre de forma unificada.
 
 ---
 
