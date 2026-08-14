@@ -22,6 +22,7 @@ export interface Product {
 export interface ProductQueryParams {
   search?: string;
   categoryId?: string;
+  categoryName?: string;
   page?: number;
   limit?: number;
 }

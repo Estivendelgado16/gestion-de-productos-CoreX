@@ -1,17 +1,20 @@
 import {
   ConflictException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ILike, Repository } from 'typeorm';
+import { ILike, IsNull, Repository } from 'typeorm';
 import { Product } from './entities/product.entity';
 import { ProductImage } from './entities/product-image.entity';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { QueryProductDto } from './dto/query-product.dto';
 import { CategoriesService } from '../categories/categories.service';
+import type { JwtPayload } from '../auth/interfaces/jwt-payload.interface';
+import { UserRole } from '../users/enums/user-role.enum';
 
 @Injectable()
 export class ProductsService {
@@ -24,7 +27,7 @@ export class ProductsService {
     private readonly configService: ConfigService,
   ) {}
 
-  async findAll(query: QueryProductDto) {
+  async findAll(query: QueryProductDto, user?: JwtPayload | null) {
     const page = query.page ?? 1;
     const limit = query.limit ?? 10;
 
@@ -35,6 +38,12 @@ export class ProductsService {
       .orderBy('product.createdAt', 'DESC')
       .skip((page - 1) * limit)
       .take(limit);
+
+    if (user?.role === UserRole.ADMIN) {
+      qb.andWhere('product.createdById = :ownerId', {
+        ownerId: user.sub,
+      });
+    }
 
     if (query.search) {
       qb.andWhere(
@@ -51,6 +60,12 @@ export class ProductsService {
       });
     }
 
+    if (query.categoryName) {
+      qb.andWhere('category.name ILIKE :categoryName', {
+        categoryName: query.categoryName,
+      });
+    }
+
     const [data, total] = await qb.getManyAndCount();
 
     return {
@@ -62,17 +77,20 @@ export class ProductsService {
     };
   }
 
-  async findOne(id: string): Promise<Product> {
+  async findOne(id: string, user?: JwtPayload | null): Promise<Product> {
     const product = await this.productsRepository.findOne({ where: { id } });
     if (!product) {
+      throw new NotFoundException('Producto no encontrado');
+    }
+    if (user?.role === UserRole.ADMIN && product.createdById !== user.sub) {
       throw new NotFoundException('Producto no encontrado');
     }
     return product;
   }
 
-  async create(dto: CreateProductDto): Promise<Product> {
+  async create(dto: CreateProductDto, creatorId: string): Promise<Product> {
     await this.categoriesService.findOne(dto.categoryId);
-    await this.assertNameNotTaken(dto.name);
+    await this.assertNameNotTaken(dto.name, creatorId);
 
     const providedImages = dto.images ?? [];
     const images =
@@ -93,6 +111,7 @@ export class ProductsService {
       price: dto.price,
       stock: dto.stock,
       categoryId: dto.categoryId,
+      createdById: creatorId,
       images,
     });
 
@@ -100,15 +119,20 @@ export class ProductsService {
     return this.findOne(saved.id);
   }
 
-  async update(id: string, dto: UpdateProductDto): Promise<Product> {
+  async update(
+    id: string,
+    dto: UpdateProductDto,
+    user: JwtPayload,
+  ): Promise<Product> {
     const product = await this.findOne(id);
+    this.assertOwner(product, user);
 
     if (dto.categoryId && dto.categoryId !== product.categoryId) {
       await this.categoriesService.findOne(dto.categoryId);
     }
 
     if (dto.name && dto.name.toLowerCase() !== product.name.toLowerCase()) {
-      await this.assertNameNotTaken(dto.name);
+      await this.assertNameNotTaken(dto.name, product.createdById);
     }
 
     const { images, ...rest } = dto;
@@ -125,17 +149,33 @@ export class ProductsService {
     return this.findOne(id);
   }
 
-  async remove(id: string): Promise<void> {
+  async remove(id: string, user: JwtPayload): Promise<void> {
     const product = await this.findOne(id);
+    this.assertOwner(product, user);
     await this.productsRepository.remove(product);
   }
 
-  private async assertNameNotTaken(name: string): Promise<void> {
+  private assertOwner(product: Product, user: JwtPayload): void {
+    if (user.role === UserRole.ADMIN && product.createdById !== user.sub) {
+      throw new ForbiddenException(
+        'No puedes modificar productos creados por otro administrador',
+      );
+    }
+  }
+
+  private async assertNameNotTaken(
+    name: string,
+    ownerId: string | null,
+  ): Promise<void> {
     const existing = await this.productsRepository.findOne({
-      where: { name: ILike(name) },
+      where: ownerId
+        ? { name: ILike(name), createdById: ownerId }
+        : { name: ILike(name), createdById: IsNull() },
     });
     if (existing) {
-      throw new ConflictException('Ya existe un producto con este nombre');
+      throw new ConflictException(
+        'Ya existe un producto con este nombre en tu perfil',
+      );
     }
   }
 
