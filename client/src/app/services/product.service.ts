@@ -26,6 +26,9 @@ export class ProductService {
     if (params.categoryId !== undefined && params.categoryId !== '') {
       httpParams = httpParams.set('categoryId', params.categoryId);
     }
+    if (params.categoryName !== undefined && params.categoryName !== '') {
+      httpParams = httpParams.set('categoryName', params.categoryName);
+    }
     if (params.page !== undefined) {
       httpParams = httpParams.set('page', params.page.toString());
     }

@@ -9,6 +9,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Category } from '../../categories/entities/category.entity';
+import { User } from '../../users/entities/user.entity';
 import { ProductImage } from './product-image.entity';
 
 @Entity('products')
@@ -16,7 +17,7 @@ export class Product {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 150, unique: true })
+  @Column({ type: 'varchar', length: 150 })
   name: string;
 
   @Column({ type: 'text', nullable: true })
@@ -45,6 +46,13 @@ export class Product {
 
   @Column({ name: 'category_id' })
   categoryId: string;
+
+  @ManyToOne(() => User, { nullable: true, onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'created_by' })
+  createdBy: User | null;
+
+  @Column({ name: 'created_by', nullable: true })
+  createdById: string | null;
 
   @OneToMany(() => ProductImage, (image) => image.product, {
     cascade: true,
