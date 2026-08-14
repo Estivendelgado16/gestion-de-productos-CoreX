@@ -1,0 +1,109 @@
+<div class="tolla-user-products">
+  <div class="tolla-user-products__head">
+    <div>
+      <h1 class="tolla-user-products__eyebrow">// PRODUCTS</h1>
+      <p class="tolla-user-products__hint">
+        {{ totalProducts() }} PRODUCTS · PAGE {{ currentPage() }} OF {{ totalPages() }}
+      </p>
+    </div>
+  </div>
+
+  <div class="tolla-user-products__search">
+    <input
+      class="tolla-user-products__search-input"
+      type="search"
+      placeholder="Search products…"
+      [value]="searchTerm()"
+      (input)="onSearchInput($event)"
+      aria-label="Search products"
+    />
+    @if (searchTerm()) {
+      <button
+        type="button"
+        class="tolla-user-products__search-clear"
+        (click)="onClearSearch()"
+        aria-label="Clear search"
+      >
+        ×
+      </button>
+    }
+  </div>
+
+  <div class="tolla-user-products__body">
+    @if (loading()) {
+      @for (skeleton of [1, 2, 3, 4, 5, 6]; track skeleton) {
+        <div class="tolla-user-products__skeleton"></div>
+      }
+    } @else if (error()) {
+      <div class="tolla-user-products__error" role="alert">{{ error() }}</div>
+    } @else if (products().length === 0) {
+      <div class="tolla-user-products__empty">No products found.</div>
+    } @else {
+      <div class="tolla-user-products__grid">
+        @for (product of products(); track product.id) {
+          <article class="tolla-user-products-card">
+            @if (!isAdmin()) {
+              <div class="tolla-user-products-card__actions">
+                <button
+                  type="button"
+                  class="tolla-user-products-card__like"
+                  [class.tolla-user-products-card__like--active]="isFavorite(product.id)"
+                  (click)="toggleFavorite(product)"
+                  [attr.aria-label]="isFavorite(product.id) ? 'Quitar de favoritos' : 'Agregar a favoritos'"
+                  [attr.title]="isFavorite(product.id) ? 'Quitar de favoritos' : 'Agregar a favoritos'"
+                >
+                  <svg
+                    aria-hidden="true"
+                    viewBox="0 0 24 24"
+                    class="tolla-user-products-card__like-icon"
+                  >
+                    <path
+                      d="M12 21s-7.5-4.6-10-9.2C.4 8.6 2.4 4.5 6.3 4.5c2.2 0 3.7 1.2 4.5 2.6h2.4c.8-1.4 2.3-2.6 4.5-2.6 3.9 0 5.9 4.1 4.3 7.3C19.5 16.4 12 21 12 21Z"
+                    />
+                  </svg>
+                </button>
+              </div>
+            }
+            <div class="tolla-user-products-card__images">
+              @for (image of product.images; track image.id) {
+                <img [src]="image.url" alt="" class="tolla-user-products-card__image" />
+              } @empty {
+                <span class="tolla-user-products-card__no-image">NO IMAGE</span>
+              }
+            </div>
+            <div class="tolla-user-products-card__head">
+              <span class="tolla-user-products-card__name">{{ product.name }}</span>
+              <span class="tolla-user-products-card__price">{{ formatPrice(product.price) }}</span>
+            </div>
+            <div class="tolla-user-products-card__meta">
+              <span>{{ product.category.name }}</span>
+              <span>{{ product.stock }} in stock</span>
+            </div>
+          </article>
+        }
+      </div>
+
+      <nav class="tolla-user-products__pagination" aria-label="Pagination">
+        <button
+          type="button"
+          class="tolla-user-products__page"
+          [disabled]="currentPage() <= 1"
+          (click)="onPageChange(currentPage() - 1)"
+        >
+          ‹
+        </button>
+        <span class="tolla-user-products__page-label">
+          {{ currentPage() }} / {{ totalPages() }}
+        </span>
+        <button
+          type="button"
+          class="tolla-user-products__page"
+          [disabled]="currentPage() >= totalPages()"
+          (click)="onPageChange(currentPage() + 1)"
+        >
+          ›
+        </button>
+      </nav>
+    }
+  </div>
+</div>

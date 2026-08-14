@@ -1,9 +1,12 @@
 <div class="tolla-layout">
-  <tolla-sidebar class="tolla-layout__sidebar" />
+  @if (isAuthenticated()) {
+    <tolla-sidebar class="tolla-layout__sidebar" />
+  }
   <div class="tolla-layout__main">
     <tolla-header
       class="tolla-layout__header"
       [userName]="userName()"
+      [isAuthenticated]="isAuthenticated()"
       [resultCount]="resultCount()"
       (searchChanged)="onSearch($event)"
     />
@@ -11,4 +14,5 @@
       <router-outlet />
     </main>
   </div>
+  <tolla-login-modal />
 </div>

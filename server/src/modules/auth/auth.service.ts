@@ -5,6 +5,7 @@ import { UsersService } from '../users/users.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { AuthResponseDto } from './dto/auth-response.dto';
+import { UserRole } from '../users/enums/user-role.enum';
 
 @Injectable()
 export class AuthService {
@@ -19,12 +20,12 @@ export class AuthService {
       dto.email,
       dto.password,
     );
-    const accessToken = this.signToken(user.id, user.email);
+    const accessToken = this.signToken(user.id, user.email, user.role);
     return { accessToken, user: this.usersService.toResponse(user) };
   }
 
   async login(dto: LoginDto): Promise<AuthResponseDto> {
-    const user = await this.usersService.findByEmail(dto.email);
+    let user = await this.usersService.findByEmail(dto.email);
     if (!user) {
       throw new UnauthorizedException('Credenciales inválidas');
     }
@@ -34,11 +35,12 @@ export class AuthService {
       throw new UnauthorizedException('Credenciales inválidas');
     }
 
-    const accessToken = this.signToken(user.id, user.email);
+    user = await this.usersService.syncRoleFromConfig(user);
+    const accessToken = this.signToken(user.id, user.email, user.role);
     return { accessToken, user: this.usersService.toResponse(user) };
   }
 
-  private signToken(userId: string, email: string): string {
-    return this.jwtService.sign({ sub: userId, email });
+  private signToken(userId: string, email: string, role: UserRole): string {
+    return this.jwtService.sign({ sub: userId, email, role });
   }
 }

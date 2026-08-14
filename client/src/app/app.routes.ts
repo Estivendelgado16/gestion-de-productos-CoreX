@@ -3,25 +3,35 @@ import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+  { path: '', redirectTo: 'publicCatalog', pathMatch: 'full' },
   {
-    path: 'login',
+    path: 'publicCatalog',
     loadComponent: () =>
-      import('./features/auth/pages/login/login.component').then((m) => m.LoginComponent),
+      import('./features/public-catalog/public-catalog.component').then(
+        (m) => m.PublicCatalogComponent,
+      ),
   },
   {
     path: '',
-    canActivate: [authGuard],
     loadComponent: () =>
       import('./features/layout/components/layout-container/layout-container.component').then(
         (m) => m.LayoutContainerComponent,
       ),
     children: [
       {
-        path: 'dashboard',
+        path: 'userProducts',
+        canActivate: [authGuard],
         loadComponent: () =>
-          import('./features/dashboard/pages/dashboard/dashboard.component').then(
-            (m) => m.DashboardComponent,
+          import('./features/user-products/user-products.component').then(
+            (m) => m.UserProductsComponent,
+          ),
+      },
+      {
+        path: 'userFavoritos',
+        canActivate: [authGuard],
+        loadComponent: () =>
+          import('./features/favorites/pages/favorite-list/favorite-list.component').then(
+            (m) => m.FavoriteListComponent,
           ),
       },
       {
@@ -32,7 +42,16 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'dashboard',
+        canActivate: [authGuard],
+        loadComponent: () =>
+          import('./features/dashboard/pages/dashboard/dashboard.component').then(
+            (m) => m.DashboardComponent,
+          ),
+      },
+      {
         path: 'products/new',
+        canActivate: [authGuard],
         loadComponent: () =>
           import('./features/products/pages/product-form/product-form.component').then(
             (m) => m.ProductFormComponent,
@@ -40,6 +59,7 @@ export const routes: Routes = [
       },
       {
         path: 'products/:id/edit',
+        canActivate: [authGuard],
         loadComponent: () =>
           import('./features/products/pages/product-form/product-form.component').then(
             (m) => m.ProductFormComponent,
@@ -47,6 +67,7 @@ export const routes: Routes = [
       },
       {
         path: 'categories',
+        canActivate: [authGuard],
         loadComponent: () =>
           import('./features/categories/pages/category-list/category-list.component').then(
             (m) => m.CategoryListComponent,
@@ -54,6 +75,7 @@ export const routes: Routes = [
       },
       {
         path: 'categories/new',
+        canActivate: [authGuard],
         loadComponent: () =>
           import('./features/categories/pages/category-form/category-form.component').then(
             (m) => m.CategoryFormComponent,
@@ -61,6 +83,7 @@ export const routes: Routes = [
       },
       {
         path: 'categories/:id/edit',
+        canActivate: [authGuard],
         loadComponent: () =>
           import('./features/categories/pages/category-form/category-form.component').then(
             (m) => m.CategoryFormComponent,
@@ -68,6 +91,7 @@ export const routes: Routes = [
       },
       {
         path: 'favorites',
+        canActivate: [authGuard],
         loadComponent: () =>
           import('./features/favorites/pages/favorite-list/favorite-list.component').then(
             (m) => m.FavoriteListComponent,
@@ -75,6 +99,7 @@ export const routes: Routes = [
       },
       {
         path: 'settings',
+        canActivate: [authGuard],
         loadComponent: () =>
           import('./features/settings/pages/settings.component').then(
             (m) => m.SettingsComponent,
@@ -82,5 +107,5 @@ export const routes: Routes = [
       },
     ],
   },
-  { path: '**', redirectTo: 'dashboard' },
+  { path: '**', redirectTo: 'publicCatalog' },
 ];
