@@ -5,11 +5,13 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { User } from './entities/user.entity';
 import { UserResponseDto } from './dto/user-response.dto';
+import { UserRole } from './enums/user-role.enum';
 
 const SALT_ROUNDS = 10;
 
@@ -18,6 +20,7 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
+    private readonly configService: ConfigService,
   ) {}
 
   async findByEmail(email: string): Promise<User | null> {
@@ -43,7 +46,19 @@ export class UsersService {
       name,
       email,
       password: hashedPassword,
+      role: this.resolveRoleForEmail(email),
     });
+    return this.usersRepository.save(user);
+  }
+
+  async syncRoleFromConfig(user: User): Promise<User> {
+    const configuredRole = this.resolveRoleForEmail(user.email);
+
+    if (user.role === configuredRole) {
+      return user;
+    }
+
+    user.role = configuredRole;
     return this.usersRepository.save(user);
   }
 
@@ -77,7 +92,20 @@ export class UsersService {
       id: user.id,
       name: user.name,
       email: user.email,
+      role: user.role,
       createdAt: user.createdAt,
     };
+  }
+
+  private resolveRoleForEmail(email: string): UserRole {
+    const adminEmails = this.configService
+      .get<string>('ADMIN_EMAILS', '')
+      .split(',')
+      .map((adminEmail: string) => adminEmail.trim().toLowerCase())
+      .filter(Boolean);
+
+    return adminEmails.includes(email.toLowerCase())
+      ? UserRole.ADMIN
+      : UserRole.USER;
   }
 }

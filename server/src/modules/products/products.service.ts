@@ -3,6 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ILike, Repository } from 'typeorm';
 import { Product } from './entities/product.entity';
@@ -20,6 +21,7 @@ export class ProductsService {
     @InjectRepository(ProductImage)
     private readonly productImagesRepository: Repository<ProductImage>,
     private readonly categoriesService: CategoriesService,
+    private readonly configService: ConfigService,
   ) {}
 
   async findAll(query: QueryProductDto) {
@@ -72,15 +74,26 @@ export class ProductsService {
     await this.categoriesService.findOne(dto.categoryId);
     await this.assertNameNotTaken(dto.name);
 
+    const providedImages = dto.images ?? [];
+    const images =
+      providedImages.length > 0
+        ? providedImages.map((url, index) =>
+            this.productImagesRepository.create({ url, order: index }),
+          )
+        : [
+            this.productImagesRepository.create({
+              url: await this.buildAutoImageUrl(dto.name),
+              order: 0,
+            }),
+          ];
+
     const product = this.productsRepository.create({
       name: dto.name,
       description: dto.description ?? null,
       price: dto.price,
       stock: dto.stock,
       categoryId: dto.categoryId,
-      images: (dto.images ?? []).map((url, index) =>
-        this.productImagesRepository.create({ url, order: index }),
-      ),
+      images,
     });
 
     const saved = await this.productsRepository.save(product);
@@ -124,5 +137,57 @@ export class ProductsService {
     if (existing) {
       throw new ConflictException('Ya existe un producto con este nombre');
     }
+  }
+
+  private async buildAutoImageUrl(name: string): Promise<string> {
+    const keywords = this.extractKeywords(name);
+    const apiKey = this.configService.get<string>('PEXELS_API_KEY');
+
+    if (apiKey) {
+      const pexelsUrl = await this.searchPexelsImage(
+        keywords.join(' '),
+        apiKey,
+      );
+      if (pexelsUrl) {
+        return pexelsUrl;
+      }
+    }
+
+    const tag = keywords.join(',') || 'product';
+    return `https://loremflickr.com/640/480/${tag}`;
+  }
+
+  private async searchPexelsImage(
+    query: string,
+    apiKey: string,
+  ): Promise<string | null> {
+    try {
+      const endpoint = `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=1&orientation=landscape`;
+      const response = await fetch(endpoint, {
+        headers: { Authorization: apiKey },
+      });
+      if (!response.ok) {
+        return null;
+      }
+      const data = (await response.json()) as {
+        photos?: Array<{ src?: { large?: string; medium?: string } }>;
+      };
+      const photo = data.photos?.[0];
+      return photo?.src?.large ?? photo?.src?.medium ?? null;
+    } catch {
+      return null;
+    }
+  }
+
+  private extractKeywords(name: string): string[] {
+    return name
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, ' ')
+      .trim()
+      .split(/\s+/)
+      .filter((token) => token.length >= 2 && !/^\d+$/.test(token))
+      .slice(0, 3);
   }
 }

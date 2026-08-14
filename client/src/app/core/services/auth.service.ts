@@ -10,7 +10,7 @@ import {
   LogoutResponse,
   RegisterPayload,
 } from '../../models/auth.model';
-import { User } from '../../models/user.model';
+import { User, UserRole } from '../../models/user.model';
 import { API_BASE_URL, AUTH_TOKEN_KEY, AUTH_USER_KEY } from '../config/api.config';
 
 @Injectable({ providedIn: 'root' })
@@ -66,6 +66,14 @@ export class AuthService {
 
   isAuthenticated(): boolean {
     return Boolean(this.getToken());
+  }
+
+  getRole(): UserRole | null {
+    return this.getStoredUser()?.role ?? null;
+  }
+
+  isAdmin(): boolean {
+    return this.getRole() === 'admin';
   }
 
   private persistSession(response: AuthResponse): void {

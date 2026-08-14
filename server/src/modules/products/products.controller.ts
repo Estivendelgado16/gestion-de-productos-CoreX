@@ -17,6 +17,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { QueryProductDto } from './dto/query-product.dto';
 import { Auth } from '../auth/decorators/auth.decorator';
+import { UserRole } from '../users/enums/user-role.enum';
 
 @ApiTags('Productos')
 @Controller('products')
@@ -40,15 +41,15 @@ export class ProductsController {
   }
 
   @Post()
-  @Auth()
-  @ApiOperation({ summary: 'Crear un producto (requiere JWT)' })
+  @Auth(UserRole.ADMIN)
+  @ApiOperation({ summary: 'Crear un producto (requiere rol admin)' })
   create(@Body() dto: CreateProductDto) {
     return this.productsService.create(dto);
   }
 
   @Patch(':id')
-  @Auth()
-  @ApiOperation({ summary: 'Actualizar un producto (requiere JWT)' })
+  @Auth(UserRole.ADMIN)
+  @ApiOperation({ summary: 'Actualizar un producto (requiere rol admin)' })
   update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: UpdateProductDto,
@@ -57,9 +58,9 @@ export class ProductsController {
   }
 
   @Delete(':id')
-  @Auth()
+  @Auth(UserRole.ADMIN)
   @HttpCode(HttpStatus.NO_CONTENT)
-  @ApiOperation({ summary: 'Eliminar un producto (requiere JWT)' })
+  @ApiOperation({ summary: 'Eliminar un producto (requiere rol admin)' })
   remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.productsService.remove(id);
   }
