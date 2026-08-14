@@ -2,9 +2,7 @@
   <div class="tolla-user-products__head">
     <div>
       <h1 class="tolla-user-products__eyebrow">// PRODUCTS</h1>
-      <p class="tolla-user-products__hint">
-        {{ totalProducts() }} PRODUCTS · PAGE {{ currentPage() }} OF {{ totalPages() }}
-      </p>
+      <p class="tolla-user-products__hint">{{ totalProducts() }} PRODUCTS</p>
     </div>
   </div>
 
@@ -27,6 +25,50 @@
         ×
       </button>
     }
+  </div>
+
+  <div class="tolla-user-products__categories">
+    <button
+      type="button"
+      class="tolla-user-products__cat-chip"
+      [class.tolla-user-products__cat-chip--active]="selectedCategoryName() === ''"
+      (click)="toggleCategory('')"
+    >
+      Todas
+    </button>
+    <button
+      type="button"
+      class="tolla-user-products__nav"
+      (click)="prevCategories()"
+      [disabled]="uniqueCategories().length <= visibleCategoryCount"
+      aria-label="Categorías anteriores"
+    >
+      ‹
+    </button>
+    <div class="tolla-user-products__cat-track">
+      @for (category of visibleCategories(); track category.name) {
+        <button
+          type="button"
+          class="tolla-user-products__cat-chip"
+          [class.tolla-user-products__cat-chip--active]="
+            category.name.toLowerCase() === selectedCategoryName().toLowerCase()
+          "
+          (click)="toggleCategory(category.name)"
+          [attr.title]="category.name"
+        >
+          {{ category.name }}
+        </button>
+      }
+    </div>
+    <button
+      type="button"
+      class="tolla-user-products__nav"
+      (click)="nextCategories()"
+      [disabled]="uniqueCategories().length <= visibleCategoryCount"
+      aria-label="Siguientes categorías"
+    >
+      ›
+    </button>
   </div>
 
   <div class="tolla-user-products__body">
@@ -82,28 +124,6 @@
           </article>
         }
       </div>
-
-      <nav class="tolla-user-products__pagination" aria-label="Pagination">
-        <button
-          type="button"
-          class="tolla-user-products__page"
-          [disabled]="currentPage() <= 1"
-          (click)="onPageChange(currentPage() - 1)"
-        >
-          ‹
-        </button>
-        <span class="tolla-user-products__page-label">
-          {{ currentPage() }} / {{ totalPages() }}
-        </span>
-        <button
-          type="button"
-          class="tolla-user-products__page"
-          [disabled]="currentPage() >= totalPages()"
-          (click)="onPageChange(currentPage() + 1)"
-        >
-          ›
-        </button>
-      </nav>
     }
   </div>
 </div>
