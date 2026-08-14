@@ -1,11 +1,13 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 
 import { AuthService } from '../../core/services/auth.service';
 import { getApiErrorMessage } from '../../core/utils/api-error-message';
 import { formatPrice } from '../../core/utils/format-price';
+import { Category } from '../../models/category.model';
 import { Product, ProductListResponse } from '../../models/product.model';
+import { CategoryService } from '../../services/category.service';
 import { FavoriteService } from '../../services/favorite.service';
 import { ProductService } from '../../services/product.service';
 
@@ -18,21 +20,48 @@ import { ProductService } from '../../services/product.service';
 export class UserProductsComponent implements OnInit {
   private readonly productService: ProductService = inject(ProductService);
   private readonly favoriteService: FavoriteService = inject(FavoriteService);
+  private readonly categoryService: CategoryService = inject(CategoryService);
   private readonly authService: AuthService = inject(AuthService);
   private readonly route: ActivatedRoute = inject(ActivatedRoute);
   private readonly router: Router = inject(Router);
 
   readonly products = signal<Product[]>([]);
   readonly totalProducts = signal<number>(0);
-  readonly currentPage = signal<number>(1);
-  readonly totalPages = signal<number>(1);
-  readonly limit = signal<number>(12);
   readonly searchTerm = signal<string>('');
   readonly loading = signal<boolean>(true);
   readonly error = signal<string | null>(null);
   readonly favoriteIds = signal<Set<string>>(new Set<string>());
+  readonly categories = signal<Category[]>([]);
+  readonly selectedCategoryName = signal<string>('');
+  readonly visibleCategoryCount = 10;
+  readonly carouselIndex = signal<number>(0);
+
+  readonly uniqueCategories = computed<Category[]>(() => {
+    const seen = new Set<string>();
+    return this.categories().filter((category) => {
+      const key = category.name.trim().toLowerCase();
+      if (seen.has(key)) {
+        return false;
+      }
+      seen.add(key);
+      return true;
+    });
+  });
+
+  readonly visibleCategories = computed<Category[]>(() => {
+    const cats = this.uniqueCategories();
+    const n = cats.length;
+
+    if (n <= this.visibleCategoryCount) {
+      return cats;
+    }
+
+    const start = this.carouselIndex();
+    return Array.from({ length: this.visibleCategoryCount }, (_, i) => cats[(start + i) % n]);
+  });
 
   ngOnInit(): void {
+    this.loadCategories();
     this.loadFavorites();
     this.route.queryParams.subscribe(() => this.loadProducts());
   }
@@ -82,7 +111,7 @@ export class UserProductsComponent implements OnInit {
 
   onSearch(term: string): void {
     void this.router.navigate(['/userProducts'], {
-      queryParams: { search: term || null, page: 1 },
+      queryParams: { search: term || null },
       queryParamsHandling: 'merge',
     });
   }
@@ -95,12 +124,34 @@ export class UserProductsComponent implements OnInit {
     this.onSearch('');
   }
 
-  onPageChange(page: number): void {
-    if (page < 1 || page > this.totalPages()) {
+  toggleCategory(categoryName: string): void {
+    this.selectedCategoryName.update((current) =>
+      current.toLowerCase() === categoryName.toLowerCase() ? '' : categoryName,
+    );
+    this.loadProducts();
+  }
+
+  nextCategories(): void {
+    const n = this.uniqueCategories().length;
+    if (n <= this.visibleCategoryCount) {
       return;
     }
-    this.currentPage.set(page);
-    this.loadProducts();
+    this.carouselIndex.update((index) => (index + this.visibleCategoryCount) % n);
+  }
+
+  prevCategories(): void {
+    const n = this.uniqueCategories().length;
+    if (n <= this.visibleCategoryCount) {
+      return;
+    }
+    this.carouselIndex.update((index) => (index - this.visibleCategoryCount + n) % n);
+  }
+
+  private loadCategories(): void {
+    this.categoryService.getCategories().subscribe({
+      next: (cats: Category[]) => this.categories.set(cats),
+      error: () => this.categories.set([]),
+    });
   }
 
   private loadFavorites(): void {
@@ -113,26 +164,26 @@ export class UserProductsComponent implements OnInit {
 
   private loadProducts(): void {
     const search = (this.route.snapshot.queryParamMap.get('search') ?? '').trim();
-    const pageParam = Number(this.route.snapshot.queryParamMap.get('page')) || 1;
 
     this.searchTerm.set(search);
-    this.currentPage.set(pageParam);
     this.loading.set(true);
     this.error.set(null);
 
     this.productService
-      .getProducts({ search: search || undefined, page: pageParam, limit: this.limit() })
+      .getProducts({
+        search: search || undefined,
+        categoryName: this.selectedCategoryName() || undefined,
+        limit: 1000,
+      })
       .subscribe({
         next: (response: ProductListResponse) => {
           this.products.set(response.data);
           this.totalProducts.set(response.total);
-          this.totalPages.set(response.totalPages);
           this.loading.set(false);
         },
         error: (error: unknown) => {
           this.products.set([]);
           this.totalProducts.set(0);
-          this.totalPages.set(1);
           this.error.set(getApiErrorMessage(error, 'Unable to load products.'));
           this.loading.set(false);
         },

@@ -75,6 +75,88 @@
     }
   }
 
+  &__categories {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    overflow: hidden;
+  }
+
+  &__cat-track {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    overflow: hidden;
+    flex-wrap: nowrap;
+  }
+
+  &__nav {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    font-family: var(--tolla-font-mono);
+    font-size: 18px;
+    color: var(--tolla-text-muted);
+    background: var(--tolla-bg-card);
+    border: 1px solid var(--tolla-border);
+    border-radius: var(--tolla-radius-sm);
+    cursor: pointer;
+    transition: border-color var(--tolla-transition), color var(--tolla-transition);
+
+    &:hover:not(:disabled),
+    &:focus-visible:not(:disabled) {
+      border-color: var(--tolla-cyan);
+      color: var(--tolla-cyan);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--tolla-cyan);
+      outline-offset: 2px;
+    }
+
+    &:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+  }
+
+  &__cat-chip {
+    font-family: var(--tolla-font-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--tolla-text-muted);
+    background: var(--tolla-bg-card);
+    border: 1px solid var(--tolla-border);
+    border-radius: var(--tolla-radius-sm);
+    padding: 7px 14px;
+    cursor: pointer;
+    transition:
+      border-color var(--tolla-transition),
+      color var(--tolla-transition),
+      box-shadow var(--tolla-transition);
+
+    &:hover:not(:disabled),
+    &:focus-visible:not(:disabled) {
+      border-color: var(--tolla-cyan);
+      color: var(--tolla-cyan);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--tolla-cyan);
+      outline-offset: 2px;
+    }
+
+    &--active {
+      border-color: var(--tolla-cyan);
+      color: var(--tolla-cyan);
+      box-shadow: 0 0 12px var(--tolla-glow-cyan);
+    }
+  }
+
   &__body {
     display: flex;
     flex-direction: column;
@@ -237,10 +319,13 @@
     display: flex;
     gap: 8px;
     min-height: 160px;
+    min-width: 0;
   }
 
   &__image {
-    width: 280px;
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: 100%;
     height: 160px;
     object-fit: cover;
     border-radius: var(--tolla-radius-sm);
